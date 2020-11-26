@@ -1,12 +1,13 @@
-import React, {useContext} from "react";
+import React from "react";
+
+/* Components */
+import Header from "../../components/header/header.component";
 
 export default function ChildConfigPage() {
 
     return (
-        <div style={{display: "flex", justifyContent: "center"}}>
-            <b>
-            Oi prof Andrea
-            </b>
+        <div>
+            <Header/>
         </div>
     );
 }

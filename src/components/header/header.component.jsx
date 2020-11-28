@@ -55,6 +55,8 @@ export default function Header() {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
+                        component={Link}
+                        to='/'
                     >
                         <img alt='logo' style={{width: 270, height: 55}} src={require('../../assets/timeControlInLine.png')}/>
                     </Button>
@@ -79,9 +81,9 @@ export default function Header() {
                             <Avatar className={classes.orange}>N</Avatar>
                         </IconButton>
                     ))}
-                    <IconButton className={classes.avatar} component={Link} to='/child2'>
-                        <Avatar className={classes.silver}>N</Avatar>
-                    </IconButton>
+                    {/*<IconButton className={classes.avatar} component={Link} to='/child2'>*/}
+                    {/*    <Avatar className={classes.silver}>N</Avatar>*/}
+                    {/*</IconButton>*/}
                     <IconButton className={classes.avatar} component={Link} to='/child/add'>
                         <More className={classes.moreIcon}/>
                     </IconButton>

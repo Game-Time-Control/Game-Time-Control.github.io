@@ -64,7 +64,6 @@ export const useStyles = makeStyles((theme) => ({
     subAppbar: {
         backgroundColor: '#545050', //363232 //e0e0e0
         height: '140px',
-        width: '100%',
         display: 'flex',
         justifyContent: 'flex-start',
         paddingLeft: '5vw',

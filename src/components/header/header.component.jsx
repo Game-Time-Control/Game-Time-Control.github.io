@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 
 /* Material UI */
@@ -17,9 +17,26 @@ import {useStyles} from "./header.styles"
 import {ReactComponent as More} from '../../assets/plus.svg';
 import {ReactComponent as LogOut} from '../../assets/log-out.svg';
 import {ReactComponent as Settings} from '../../assets/settings.svg';
+import {getAllChildren} from "../../api/ApiChild";
 
 export default function Header() {
     const classes = useStyles();
+    const [children, setChildren] = React.useState([]);
+
+    useEffect(() => {
+        const callApiFindAllChildren = async (parent) => {
+            const response = await getAllChildren(parent);
+            const body = await response.json();
+
+            return body.payload
+        };
+
+        callApiFindAllChildren("5fbd3c79176adb4148996c2a")
+            .then(res => {
+                setChildren(res);
+            })
+            .catch(err => console.log(err));
+    }, []);
 
     return (
         <div className={classes.root}>
@@ -57,9 +74,11 @@ export default function Header() {
                     Família
                 </div>
                 <div>
-                    <IconButton className={classes.avatar} component={Link} to='/child1'>
-                        <Avatar className={classes.orange}>N</Avatar>
-                    </IconButton>
+                    {children.map((children, index) => (
+                        <IconButton className={classes.avatar} component={Link} to={`/child/${children.id}`}>
+                            <Avatar className={classes.orange}>N</Avatar>
+                        </IconButton>
+                    ))}
                     <IconButton className={classes.avatar} component={Link} to='/child2'>
                         <Avatar className={classes.silver}>N</Avatar>
                     </IconButton>

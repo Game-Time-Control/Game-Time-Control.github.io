@@ -93,7 +93,7 @@ export default function ChildConfigPage(props) {
                 setChildInfo(res);
             })
             .catch(err => console.log(err));
-    }, []);
+    }, [childInfo]);
 
     return (
         <div>

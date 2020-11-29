@@ -5,6 +5,9 @@ import PropTypes from "prop-types";
 import Header from "../../components/header/header.component";
 import ChildCalendar from "./child-calendar/child-calendar.component";
 
+/* Styles */
+import {TitleContainer} from "./child-config.styles";
+
 /* Material UI */
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -51,7 +54,9 @@ function a11yProps(index) {
 const ChildConfig = (props) => {
     return (
         <TabPanel value={props.value} index={props.CHILD}>
-            <Typography variant="h5">Gerencie o tempo de <b>{props.childInfo.name}</b></Typography>
+            <TitleContainer>
+                <Typography variant="h5">Gerencie o tempo de <b>{props.childInfo.name}</b></Typography>
+            </TitleContainer>
             <ChildCalendar/>
         </TabPanel>
     );
@@ -67,7 +72,7 @@ const GameConfig = (props) => {
 export default function ChildConfigPage(props) {
     const [value, setValue] = React.useState(0);
     const [childInfo, setChildInfo] = React.useState([]);
-    const [tabs, setTabs] = React.useState({
+    const [tabs] = React.useState({
         CHILD: 0,
         GAME: 1});
 

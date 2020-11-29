@@ -1,15 +1,19 @@
-import React from "react";
+import React, {useEffect} from "react";
 import PropTypes from "prop-types";
 
 /* Components */
 import Header from "../../components/header/header.component";
+import ChildCalendar from "./child-calendar/child-calendar.component";
 
 /* Material UI */
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@material-ui/core/Typography"
+
+/* Api */
+import {getOneChildren} from "../../api/ApiChild";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -24,7 +28,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'span'}>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -44,12 +48,48 @@ function a11yProps(index) {
     };
 }
 
-export default function ChildConfigPage() {
+const ChildConfig = (props) => {
+    return (
+        <TabPanel value={props.value} index={props.CHILD}>
+            <Typography variant="h5">Gerencie o tempo de <b>{props.childInfo.name}</b></Typography>
+            <ChildCalendar/>
+        </TabPanel>
+    );
+};
+
+const GameConfig = (props) => {
+    return (
+        <TabPanel value={props.value} index={props.GAME}>
+        </TabPanel>
+    );
+};
+
+export default function ChildConfigPage(props) {
     const [value, setValue] = React.useState(0);
+    const [childInfo, setChildInfo] = React.useState([]);
+    const [tabs, setTabs] = React.useState({
+        CHILD: 0,
+        GAME: 1});
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    useEffect(() => {
+        const callApiGetOneChildren = async (child) => {
+            const response = await getOneChildren(child);
+            const body = await response.json();
+
+            return body.payload
+        };
+
+        callApiGetOneChildren(props.match.params.childId)
+            .then(res => {
+                setChildInfo(res);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
     return (
         <div>
             <Header/>
@@ -59,12 +99,9 @@ export default function ChildConfigPage() {
                     <Tab label="Jogos" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
-                Controle da criança
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                Crontrole dos jogos
-            </TabPanel>
+
+            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} childInfo={childInfo}/>
+            <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
         </div>
     );
 }

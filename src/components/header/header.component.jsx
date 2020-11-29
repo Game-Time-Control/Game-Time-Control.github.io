@@ -18,6 +18,7 @@ import {ReactComponent as More} from '../../assets/plus.svg';
 import {ReactComponent as LogOut} from '../../assets/log-out.svg';
 import {ReactComponent as Settings} from '../../assets/settings.svg';
 import {getAllChildren} from "../../api/ApiChild";
+import Tooltip from "@material-ui/core/Tooltip";
 
 export default function Header() {
     const classes = useStyles();
@@ -58,7 +59,8 @@ export default function Header() {
                         component={Link}
                         to='/'
                     >
-                        <img alt='logo' style={{width: 270, height: 55}} src={require('../../assets/timeControlInLine.png')}/>
+                        <img alt='logo' style={{width: 270, height: 55}}
+                             src={require('../../assets/timeControlInLine.png')}/>
                     </Button>
                     <Typography className={classes.title} variant="h6" noWrap>
 
@@ -77,9 +79,12 @@ export default function Header() {
                 </div>
                 <div>
                     {children.map((children, index) => (
-                        <IconButton className={classes.avatar} component={Link} to={`/child/${children.id}`}>
-                            <Avatar className={classes.orange}>N</Avatar>
-                        </IconButton>
+                        <Tooltip key={index} title={children.name} aria-label={children.name}>
+                            <IconButton className={classes.avatar} component={Link}
+                                        to={`/child/${children.id}`}>
+                                <Avatar className={classes.orange}>{children.name[0]+children.name[1]}</Avatar>
+                            </IconButton>
+                        </Tooltip>
                     ))}
                     {/*<IconButton className={classes.avatar} component={Link} to='/child2'>*/}
                     {/*    <Avatar className={classes.silver}>N</Avatar>*/}
@@ -88,7 +93,7 @@ export default function Header() {
                         <More className={classes.moreIcon}/>
                     </IconButton>
                 </div>
-                </div>
+            </div>
 
         </div>
     );

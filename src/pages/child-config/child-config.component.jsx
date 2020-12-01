@@ -93,7 +93,7 @@ export default function ChildConfigPage(props) {
                 setChildInfo(res);
             })
             .catch(err => console.log(err));
-    }, [childInfo]);
+    }, [props.match.params.childId]);
 
     return (
         <div>
@@ -106,7 +106,7 @@ export default function ChildConfigPage(props) {
             </AppBar>
 
             <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} childInfo={childInfo}/>
-            <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
+            <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME} childInfo={childInfo}/>
         </div>
     );
 }

@@ -15,7 +15,7 @@ function valuetext(value) {
     return `${value}°C`;
 }
 
-export default function ChildCalendar() {
+export default function ChildCalendar(props) {
 
     return (
         <div>

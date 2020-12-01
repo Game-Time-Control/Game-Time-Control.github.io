@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 /* Components */
 import Header from "../../components/header/header.component";
 import ChildCalendar from "./child-calendar/child-calendar.component";
+import Subheader from "../../components/subheader/subheader.component";
 
 /* Styles */
 import {TitleContainer} from "./child-config.styles";
@@ -98,6 +99,7 @@ export default function ChildConfigPage(props) {
     return (
         <div>
             <Header/>
+            <Subheader/>
             <AppBar position="static">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
                     <Tab label="Calendário" {...a11yProps(0)} />

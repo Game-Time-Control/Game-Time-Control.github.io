@@ -35,3 +35,24 @@ export function getOneChildren(child) {
         });
 
 }
+
+export function addChildren(parent, data) {
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: data.name,
+        })
+    };
+
+    return fetch(`${apiUrl}/parent/${parent}/child/add`, requestOptions)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.log(error)
+        });
+
+}

@@ -16,7 +16,7 @@ import {ReactComponent as More} from "../../assets/plus.svg";
 import PopUp from "../popup/popup.component";
 
 /* Api */
-import {getAllChildren} from "../../api/ApiChild";
+import {addChildren, getAllChildren} from "../../api/ApiChild";
 import Button from "@material-ui/core/Button";
 
 export default function Subheader() {
@@ -71,35 +71,43 @@ export default function Subheader() {
             setName(value);
     };
 
-    const acceptAdd = () => {
+    const acceptAdd = async () => {
         handleClose();
         setIsRowsInput(false);
-        // const response = await deleteUser(auth, props.match.params.userId, props.match.params.companyId);
-        // const body = await response.json();
-        //
-        // if (response.status !== 200) throw Error(body.message);
-        //
-        // if(response.status === 200){
+        if (name.length === 0) {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Insira o nome da criança.`,
+                success: 1,
+                acceptable: false
+            });
+        }
+
+
+        let data = {name: name};
+        const response = await addChildren("5fbd3c79176adb4148996c2a", data);
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.message);
+
+        if(response.status === 200){
             setPopUp({
                 popUp: true,
                 popUpTitle: "Aviso",
                 popUpText: `Criança adicionada com sucesso`,
                 success: 1,
-                acceptable: false,
-                first: false,
-                second: false
+                acceptable: false
             });
-        // } else {
-        //     setPopUp({
-        //         popUp: true,
-        //         popUpTitle: "Erro",
-        //         popUpText: `Criança não pode ser adicionada`,
-        //         success: 1,
-        //         acceptable: false,
-        //         first: false,
-        //         second: false
-        //     });
-        // }
+        } else {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Criança não pode ser adicionada`,
+                success: 1,
+                acceptable: false
+            });
+        }
 
     };
 

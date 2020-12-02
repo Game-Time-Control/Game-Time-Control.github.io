@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 
 /* Styles */
-import {useStyles} from "../header/header.styles";
+import {useStyles} from "./subheader.styles";
 
 /* Material UI */
 import Tooltip from "@material-ui/core/Tooltip";
@@ -21,11 +21,13 @@ import Button from "@material-ui/core/Button";
 
 export default function Subheader() {
     const classes = useStyles();
+    debugger
     const [children, setChildren] = React.useState([]);
     const [name, setName] = React.useState('');
     const [isRowsInput, setIsRowsInput] = React.useState(false);
 
     let rowsInput = [{name: "name", type: "text", value: name, label: "Nome", placeholder: "", required: true, maxLength: 40}];
+
 
     const [popUp, setPopUp] = React.useState({
         popUp: false,
@@ -120,9 +122,9 @@ export default function Subheader() {
                 <div>
                     {children.map((children, index) => (
                         <Tooltip key={index} title={children.name} aria-label={children.name}>
-                            <IconButton className={classes.avatar} component={Link}
+                            <IconButton component={Link}
                                         to={`/child/${children.id}`}>
-                                <Avatar className={classes.orange}>{children.name[0]+children.name[1]}</Avatar>
+                                <Avatar style={{width: 60, height: 60, backgroundColor: "#ff3d00"}}>{children.name[0]+children.name[1]}</Avatar>
                             </IconButton>
                         </Tooltip>
                     ))}

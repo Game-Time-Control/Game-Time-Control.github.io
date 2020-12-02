@@ -3,11 +3,10 @@ import PropTypes from "prop-types";
 
 /* Components */
 import Header from "../../components/header/header.component";
-import ChildCalendar from "./child-calendar/child-calendar.component";
 import Subheader from "../../components/subheader/subheader.component";
 
 /* Styles */
-import {TitleContainer} from "./child-config.styles";
+import {TitleContainer, CalendarContainer} from "./child-config.styles";
 
 /* Material UI */
 import AppBar from "@material-ui/core/AppBar";
@@ -15,9 +14,20 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography"
+import Paper from "@material-ui/core/Paper";
+import Container from "@material-ui/core/Container";
+import Slider from "@material-ui/core/Slider";
 
 /* Api */
 import {getOneChildren} from "../../api/ApiChild";
+
+const sunday = 0;
+const monday = 1;
+const tuesday = 1;
+const wednesday = 1;
+const thursday = 2;
+const friday = 1;
+const saturday = 1;
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -53,12 +63,42 @@ function a11yProps(index) {
 }
 
 const ChildConfig = (props) => {
+    const valuetext = (value) => {
+        return `${value}°C`;
+    }
+
     return (
         <TabPanel value={props.value} index={props.CHILD}>
             <TitleContainer>
-                <Typography variant="h5">Gerencie o tempo de <b>{props.childInfo.name}</b></Typography>
+                <Typography variant="h5">Gerencie o tempo de <b>{props.childName}</b></Typography>
             </TitleContainer>
-            <ChildCalendar/>
+            <Paper variant="outlined">
+                {console.log(props.days)}
+                <Container>
+                    {props.days.map((day, index) => (
+                        props.call ?
+                        <CalendarContainer key={index}>
+                            {console.log(props.days)}
+                            <Typography id="discrete-slider" gutterBottom>
+                                {day.name}
+                            </Typography>
+                            <Slider
+                                value={props.days[index].maxHours}
+                                min={0}
+                                step={1}
+                                max={24}
+                                marks
+                                onChange={(event,value) => props.handleChangeSlider(event, value,index)}
+                                getAriaValueText={valuetext}
+                                aria-labelledby="discrete-slider"
+                                valueLabelDisplay="auto"
+                                style={{width: '15vw'}}
+                            />
+                        </CalendarContainer>
+                            : null
+                    ))}
+                </Container>
+            </Paper>
         </TabPanel>
     );
 };
@@ -72,7 +112,16 @@ const GameConfig = (props) => {
 
 export default function ChildConfigPage(props) {
     const [value, setValue] = React.useState(0);
-    const [childInfo, setChildInfo] = React.useState([]);
+    const [call, setCall] = React.useState(false);
+    const [childInfo, setChildInfo] = React.useState([{name: "Domingo", maxHours: 1},
+        {name: "Segunda", maxHours: 0},
+        {name: "Terça", maxHours: 0},
+        {name: "Quarta", maxHours: 0},
+        {name: "Quinta", maxHours: 0},
+        {name: "Sexta", maxHours: 0},
+        {name: "Sábado", maxHours: 0}]);
+    const [childName, setChildName] = React.useState('');
+
     const [tabs] = React.useState({
         CHILD: 0,
         GAME: 1});
@@ -91,10 +140,27 @@ export default function ChildConfigPage(props) {
 
         callApiGetOneChildren(props.match.params.childId)
             .then(res => {
-                setChildInfo(res);
+                let tempChildInfo = [{name: "Domingo", maxHours: res.days[sunday].maxTime},
+                    {name: "Segunda", maxHours: res.days[monday].maxTime},
+                    {name: "Terça", maxHours: res.days[tuesday].maxTime},
+                    {name: "Quarta", maxHours: res.days[wednesday].maxTime},
+                    {name: "Quinta", maxHours: res.days[thursday].maxTime},
+                    {name: "Sexta", maxHours: res.days[friday].maxTime},
+                    {name: "Sábado", maxHours: res.days[saturday].maxTime}]
+                setChildInfo(tempChildInfo);
+                setChildName(res.name);
+                setCall(true);
             })
             .catch(err => console.log(err));
     }, [props.match.params.childId]);
+
+    const handleChangeSlider = (event, value, index) => {
+        let daysCopy = [...childInfo];
+        if(daysCopy[index].maxHours !== value) {
+            daysCopy[index].maxHours = value;
+            setChildInfo(daysCopy);
+        }
+    }
 
     return (
         <div>
@@ -106,9 +172,8 @@ export default function ChildConfigPage(props) {
                     <Tab label="Jogos" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
-
-            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} childInfo={childInfo}/>
-            <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME} childInfo={childInfo}/>
+            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call}/>
+            <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
         </div>
     );
 }

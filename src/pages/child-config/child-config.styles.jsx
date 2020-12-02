@@ -5,3 +5,11 @@ export const TitleContainer = styled.div`
     justify-content: center;
     padding: 20px;
 `;
+
+export const CalendarContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px;
+`;

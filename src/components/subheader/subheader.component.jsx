@@ -84,6 +84,7 @@ export default function Subheader() {
                 success: 1,
                 acceptable: false
             });
+            return;
         }
 
 

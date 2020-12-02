@@ -56,3 +56,22 @@ export function addChildren(parent, data) {
         });
 
 }
+
+export function updateChildren(parent, child, data) {
+
+    const requestOptions = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    };
+
+    return fetch(`${apiUrl}/parent/${parent}/child/${child}/update`, requestOptions)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.log(error)
+        });
+
+}

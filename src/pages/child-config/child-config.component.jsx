@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 /* Components */
 import Header from "../../components/header/header.component";
 import Subheader from "../../components/subheader/subheader.component";
+import PopUp from "../../components/popup/popup.component";
 
 /* Styles */
 import {TitleContainer, CalendarContainer} from "./child-config.styles";
@@ -17,9 +18,10 @@ import Typography from "@material-ui/core/Typography"
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import Slider from "@material-ui/core/Slider";
+import Button from "@material-ui/core/Button";
 
 /* Api */
-import {getOneChildren} from "../../api/ApiChild";
+import {getOneChildren, updateChildren} from "../../api/ApiChild";
 
 const sunday = 0;
 const monday = 1;
@@ -98,6 +100,11 @@ const ChildConfig = (props) => {
                             : null
                     ))}
                 </Container>
+                <CalendarContainer>
+                    <Button variant="contained" color="primary" type="submit" onClick={props.handleSubmit}>
+                        Enviar
+                    </Button>
+                </CalendarContainer>
             </Paper>
         </TabPanel>
     );
@@ -121,6 +128,14 @@ export default function ChildConfigPage(props) {
         {name: "Sexta", maxHours: 0},
         {name: "Sábado", maxHours: 0}]);
     const [childName, setChildName] = React.useState('');
+    const [child, setChild] = React.useState({});
+    const [popUp, setPopUp] = React.useState({
+        popUp: false,
+        popUpTitle: "",
+        popUpText: "",
+        success: 1,
+        acceptable: true
+    });
 
     const [tabs] = React.useState({
         CHILD: 0,
@@ -128,6 +143,40 @@ export default function ChildConfigPage(props) {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+    };
+
+
+    const handleSubmit = async () => {
+        let tempChild = child;
+        for(let i=0; i<child.days.length; i++) {
+            tempChild.days[i].maxTime = childInfo[i].maxHours;
+        }
+
+        let data = tempChild;
+
+        const response = await updateChildren("5fbd3c79176adb4148996c2a", props.match.params.childId,  data);
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.message);
+
+        if(response.status === 200){
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Aviso",
+                popUpText: `Configurações da criança atualizadas com sucesso!`,
+                success: 1,
+                acceptable: false
+            });
+        } else {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Configurações da criança não puderam ser atualizadas.`,
+                success: 1,
+                acceptable: false
+            });
+        }
+
     };
 
     useEffect(() => {
@@ -140,6 +189,7 @@ export default function ChildConfigPage(props) {
 
         callApiGetOneChildren(props.match.params.childId)
             .then(res => {
+                debugger
                 let tempChildInfo = [{name: "Domingo", maxHours: res.days[sunday].maxTime},
                     {name: "Segunda", maxHours: res.days[monday].maxTime},
                     {name: "Terça", maxHours: res.days[tuesday].maxTime},
@@ -149,6 +199,7 @@ export default function ChildConfigPage(props) {
                     {name: "Sábado", maxHours: res.days[saturday].maxTime}]
                 setChildInfo(tempChildInfo);
                 setChildName(res.name);
+                setChild(res);
                 setCall(true);
             })
             .catch(err => console.log(err));
@@ -172,8 +223,10 @@ export default function ChildConfigPage(props) {
                     <Tab label="Jogos" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
-            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call}/>
+            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call} handleSubmit={handleSubmit}/>
             <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
+            {popUp.popUp ?
+                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable}/> : null}
         </div>
     );
 }

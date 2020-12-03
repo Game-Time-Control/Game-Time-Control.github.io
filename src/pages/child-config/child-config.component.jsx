@@ -66,10 +66,8 @@ function a11yProps(index) {
 
 const ChildConfig = (props) => {
     const valuetext = (value) => {
-        return `${value}°C`;
+        return `${value} h`;
     }
-
-
 
     return (
         <TabPanel value={props.value} index={props.CHILD}>

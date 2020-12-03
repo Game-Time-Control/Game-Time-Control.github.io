@@ -19,10 +19,9 @@ import Typography from "@material-ui/core/Typography"
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import Slider from "@material-ui/core/Slider";
-import Button from "@material-ui/core/Button";
 
 /* Api */
-import {deleteChildren, getOneChildren, updateChildren} from "../../api/ApiChild";
+import {deleteChildren, getAllChildren, getOneChildren, updateChildren} from "../../api/ApiChild";
 
 const sunday = 0;
 const monday = 1;
@@ -95,7 +94,7 @@ const ChildConfig = (props) => {
                                 getAriaValueText={valuetext}
                                 aria-labelledby="discrete-slider"
                                 valueLabelDisplay="auto"
-                                style={{width: '15vw'}}
+                                style={{width: '15vw', color: props.childColor}}
                             />
                         </CalendarContainer>
                             : null
@@ -121,6 +120,8 @@ const GameConfig = (props) => {
     );
 };
 
+const colors = ["#116cbc", "#ff3d00", "#9b9b9b", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
+
 export default function ChildConfigPage(props) {
     const [value, setValue] = React.useState(0);
     const [call, setCall] = React.useState(false);
@@ -140,6 +141,7 @@ export default function ChildConfigPage(props) {
         success: 1,
         acceptable: true
     });
+    const [childColor, setChildColor] = React.useState('#424242');
 
     const [tabs] = React.useState({
         CHILD: 0,
@@ -184,12 +186,37 @@ export default function ChildConfigPage(props) {
     };
 
     useEffect(() => {
+        const callApiFindAllChildren = async (parent) => {
+            const response = await getAllChildren(parent);
+            const body = await response.json();
+
+            return body.payload
+        };
+
         const callApiGetOneChildren = async (child) => {
             const response = await getOneChildren(child);
             const body = await response.json();
 
             return body.payload
         };
+
+        callApiFindAllChildren("5fbd3c79176adb4148996c2a")
+            .then(res => {
+                let temp;
+                for(let i=0, temp=0; i < res.length; i++, temp++) {
+                    res[i]["color"] = colors[temp];
+                    if(i+1%(colors.length)===0) {
+                        temp=0;
+                    }
+                }
+                for(let i=0;i<res.length;i++) {
+                    if(res[i].id === props.match.params.childId) {
+                        setChildColor(res[i].color);
+                    }
+                }
+
+            })
+            .catch(err => console.log(err));
 
         callApiGetOneChildren(props.match.params.childId)
             .then(res => {
@@ -264,7 +291,8 @@ export default function ChildConfigPage(props) {
                     <Tab label="Jogos" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
-            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal}/>
+            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider}
+                         call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal} childColor={childColor}/>
             <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
             {popUp.popUp ?
                 <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={deleteChild}

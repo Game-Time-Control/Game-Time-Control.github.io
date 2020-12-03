@@ -75,17 +75,15 @@ const ChildConfig = (props) => {
     return (
         <TabPanel value={props.value} index={props.CHILD}>
             <TitleContainer>
-                <Typography variant="h5">Gerencie o tempo de <b>{props.childName}</b></Typography>
+                <Typography variant="h5">Gerencie o Máximo de horas diárias de <b>{props.childName}</b></Typography>
             </TitleContainer>
             <Paper variant="outlined">
-                {console.log(props.days)}
                 <Container>
                     {props.days.map((day, index) => (
                         props.call ?
                         <CalendarContainer key={index}>
-                            {console.log(props.days)}
                             <Typography id="discrete-slider" gutterBottom>
-                                {day.name}
+                                {day.name} (h)
                             </Typography>
                             <Slider
                                 value={props.days[index].maxHours}

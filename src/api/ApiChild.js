@@ -75,3 +75,20 @@ export function updateChildren(parent, child, data) {
         });
 
 }
+
+export function deleteChildren(child) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    return fetch(`${apiUrl}/child/${child}/delete`, requestOptions)
+        .then(response => {
+            return response;
+        }).catch(error => {
+            console.log(error)
+        });
+
+}

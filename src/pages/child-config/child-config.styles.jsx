@@ -13,3 +13,8 @@ export const CalendarContainer = styled.div`
     flex-direction: column;
     padding: 30px;
 `;
+
+export const ContainerDeleteButton = styled.div`
+    display: flex;
+    justify-content: flex-end;
+`;

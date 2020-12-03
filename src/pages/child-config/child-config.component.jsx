@@ -5,9 +5,10 @@ import PropTypes from "prop-types";
 import Header from "../../components/header/header.component";
 import Subheader from "../../components/subheader/subheader.component";
 import PopUp from "../../components/popup/popup.component";
+import CustomButton from "../../components/custom-button/custom-button.component";
 
 /* Styles */
-import {TitleContainer, CalendarContainer} from "./child-config.styles";
+import {TitleContainer, CalendarContainer, ContainerDeleteButton} from "./child-config.styles";
 
 /* Material UI */
 import AppBar from "@material-ui/core/AppBar";
@@ -21,7 +22,7 @@ import Slider from "@material-ui/core/Slider";
 import Button from "@material-ui/core/Button";
 
 /* Api */
-import {getOneChildren, updateChildren} from "../../api/ApiChild";
+import {deleteChildren, getOneChildren, updateChildren} from "../../api/ApiChild";
 
 const sunday = 0;
 const monday = 1;
@@ -69,6 +70,8 @@ const ChildConfig = (props) => {
         return `${value}°C`;
     }
 
+
+
     return (
         <TabPanel value={props.value} index={props.CHILD}>
             <TitleContainer>
@@ -106,6 +109,9 @@ const ChildConfig = (props) => {
                     </Button>
                 </CalendarContainer>
             </Paper>
+            <ContainerDeleteButton>
+                <CustomButton type="button" deleteButton onClick={props.deleteChild}> Deletar </CustomButton>
+            </ContainerDeleteButton>
         </TabPanel>
     );
 };
@@ -212,6 +218,42 @@ export default function ChildConfigPage(props) {
         }
     }
 
+    const deleteChildModal = () => {
+        setPopUp({
+            popUp: true,
+            popUpTitle: "Deletando uma criança",
+            popUpText: `Deseja mesmo deletar ${childName}?`,
+            success: 1,
+            acceptable: true,
+        });
+    };
+
+    const deleteChild = async () => {
+        const response = await deleteChildren(props.match.params.childId);
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.message);
+
+        if(response.status === 200){
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Aviso",
+                popUpText: `Criança deletada com sucesso.`,
+                success: 2,
+                acceptable: false,
+                route: `/`
+            });
+        } else {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Criança não pode ser deletada.`,
+                success: 1,
+                acceptable: false
+            });
+        }
+    }
+
     return (
         <div>
             <Header/>
@@ -222,10 +264,10 @@ export default function ChildConfigPage(props) {
                     <Tab label="Jogos" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
-            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call} handleSubmit={handleSubmit}/>
+            <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal}/>
             <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
             {popUp.popUp ?
-                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable}/> : null}
+                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={deleteChild}/> : null}
         </div>
     );
 }

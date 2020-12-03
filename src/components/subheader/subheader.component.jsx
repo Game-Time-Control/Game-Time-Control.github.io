@@ -21,7 +21,7 @@ import Button from "@material-ui/core/Button";
 
 export default function Subheader() {
     const classes = useStyles();
-    debugger
+
     const [children, setChildren] = React.useState([]);
     const [name, setName] = React.useState('');
     const [isRowsInput, setIsRowsInput] = React.useState(false);

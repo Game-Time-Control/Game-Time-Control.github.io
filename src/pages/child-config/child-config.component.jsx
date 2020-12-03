@@ -189,7 +189,6 @@ export default function ChildConfigPage(props) {
 
         callApiGetOneChildren(props.match.params.childId)
             .then(res => {
-                debugger
                 let tempChildInfo = [{name: "Domingo", maxHours: res.days[sunday].maxTime},
                     {name: "Segunda", maxHours: res.days[monday].maxTime},
                     {name: "Terça", maxHours: res.days[tuesday].maxTime},

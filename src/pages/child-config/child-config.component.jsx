@@ -104,9 +104,9 @@ const ChildConfig = (props) => {
                     ))}
                 </Container>
                 <CalendarContainer>
-                    <Button variant="contained" color="primary" type="submit" onClick={props.handleSubmit}>
+                    <CustomButton addButton type="submit" onClick={props.handleSubmit}>
                         Enviar
-                    </Button>
+                    </CustomButton>
                 </CalendarContainer>
             </Paper>
             <ContainerDeleteButton>

@@ -19,6 +19,8 @@ import PopUp from "../popup/popup.component";
 import {addChildren, getAllChildren} from "../../api/ApiChild";
 import Button from "@material-ui/core/Button";
 
+const colors = ["#116cbc", "#ff3d00", "#9b9b9b", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
+
 export default function Subheader() {
     const classes = useStyles();
 
@@ -47,6 +49,14 @@ export default function Subheader() {
 
         callApiFindAllChildren("5fbd3c79176adb4148996c2a")
             .then(res => {
+                let temp;
+                for(let i=0, temp=0; i < res.length; i++, temp++) {
+                    res[i]["color"] = colors[temp];
+                    if(i+1%(colors.length)===0) {
+                        temp=0;
+                    }
+                }
+
                 setChildren(res);
             })
             .catch(err => console.log(err));
@@ -125,7 +135,7 @@ export default function Subheader() {
                         <Tooltip key={index} title={children.name} aria-label={children.name}>
                             <IconButton component={Link}
                                         to={`/child/${children.id}`}>
-                                <Avatar style={{width: 60, height: 60, backgroundColor: "#ff3d00"}}>{children.name[0]+children.name[1]}</Avatar>
+                                <Avatar style={{width: 60, height: 60, backgroundColor: children.color}}>{children.name[0].toUpperCase()}</Avatar>
                             </IconButton>
                         </Tooltip>
                     ))}

@@ -15,13 +15,10 @@ import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons} from ".
 /* Api */
 import {getAllChildren} from "../../api/ApiChild";
 
-export default function Home() {
-    const [value, setValue] = React.useState(0);
-    const [children, setChildren] = React.useState([]);
+const colors = ["#116cbc", "#ff3d00", "#9b9b9b", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+export default function Home() {
+    const [children, setChildren] = React.useState([]);
 
     useEffect(() => {
         const callApiFindAllChildren = async (parent) => {
@@ -33,6 +30,13 @@ export default function Home() {
 
         callApiFindAllChildren("5fbd3c79176adb4148996c2a")
             .then(res => {
+                let temp;
+                for(let i=0, temp=0; i < res.length; i++, temp++) {
+                    res[i]["color"] = colors[temp];
+                    if(i+1%(colors.length)===0) {
+                        temp=0;
+                    }
+                }
                 setChildren(res);
             })
             .catch(err => console.log(err));
@@ -48,13 +52,12 @@ export default function Home() {
                         <ContainerChildIcon key={index}>
                             <Button component={Link}
                                     to={`/child/${children.id}`}>
-                                <Avatar style={{
+                                <Avatar variant="rounded" style={{
                                     width: 100,
                                     height: 100,
-                                    backgroundColor: "#ff3d00",
-                                    borderRadius: 2,
+                                    backgroundColor: children.color,
                                     fontSize: 30
-                                }}>{children.name[0]}</Avatar>
+                                }}>{children.name[0].toUpperCase()}</Avatar>
                             </Button>
                             <ChildLabel> {children.name} </ChildLabel>
                         </ContainerChildIcon>

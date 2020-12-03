@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
 
 /* Material UI */
@@ -6,7 +6,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import MenuIcon from '@material-ui/icons/Menu';
 import Button from "@material-ui/core/Button";
 
 /* Styles */
@@ -23,14 +22,14 @@ export default function Header() {
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="open drawer"
-                    >
-                        <MenuIcon/>
-                    </IconButton>
+                    {/*<IconButton*/}
+                    {/*    edge="start"*/}
+                    {/*    className={classes.menuButton}*/}
+                    {/*    color="inherit"*/}
+                    {/*    aria-label="open drawer"*/}
+                    {/*>*/}
+                    {/*    <MenuIcon/>*/}
+                    {/*</IconButton>*/}
                     <Button
                         edge="start"
                         className={classes.menuButton}

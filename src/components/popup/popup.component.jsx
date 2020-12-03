@@ -41,10 +41,9 @@ export default function PopUp(props) {
                     </DialogContentText>
 
                     {props.isRowsInput ? props.rowsInput.map((row, index) => (
-                            <CentralizedElement>
+                            <CentralizedElement key={index}>
                                 <StyledLabel>{row.label}</StyledLabel>
                                 <StyledInput
-                                    key={index}
                                     name={row.name}
                                     type={row.type}
                                     onChange={props.handleChange}
@@ -58,12 +57,12 @@ export default function PopUp(props) {
                 <DialogActions>
                     {props.acceptable ?
                         <Button type='submit' onClick={props.acceptFunction} color="primary">
-                            Adicionar
+                            {props.action1}
                         </Button>
                         : null}
                     {props.acceptable ?
                         <Button onClick={handleClose} color="primary">
-                            Cancelar
+                            {props.action2}
                         </Button>
                         :
                         <Button onClick={handleClose} color="primary">

@@ -225,6 +225,8 @@ export default function ChildConfigPage(props) {
             popUpText: `Deseja mesmo deletar ${childName}?`,
             success: 1,
             acceptable: true,
+            action1Name: "Sim",
+            action2Name: "Não"
         });
     };
 
@@ -249,7 +251,7 @@ export default function ChildConfigPage(props) {
                 popUpTitle: "Erro",
                 popUpText: `Criança não pode ser deletada.`,
                 success: 1,
-                acceptable: false
+                acceptable: false,
             });
         }
     }
@@ -267,7 +269,8 @@ export default function ChildConfigPage(props) {
             <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider} call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal}/>
             <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
             {popUp.popUp ?
-                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={deleteChild}/> : null}
+                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={deleteChild}
+                       action1={popUp.action1Name} action2={popUp.action2Name}/> : null}
         </div>
     );
 }

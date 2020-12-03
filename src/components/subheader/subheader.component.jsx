@@ -73,7 +73,9 @@ export default function Subheader() {
             popUpTitle: "Nova criança",
             popUpText: `Informe o nome da criança que deseja adicionar.`,
             success: 1,
-            acceptable: true
+            acceptable: true,
+            action1Name: "Adicionar",
+            action2Name: "Cancelar"
         });
     };
 
@@ -147,9 +149,10 @@ export default function Subheader() {
                     </IconButton>
                 </div>
             </div>
-
             {popUp.popUp ?
-                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={acceptAdd} handleClose={handleClose} rowsInput={rowsInput} handleChange={handleChange} isRowsInput={isRowsInput}/> : null}
+                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={acceptAdd}
+                       handleClose={handleClose} rowsInput={rowsInput} handleChange={handleChange} isRowsInput={isRowsInput} action1={popUp.action1Name}
+                       action2={popUp.action2Name}/> : null}
         </div>
     );
 }

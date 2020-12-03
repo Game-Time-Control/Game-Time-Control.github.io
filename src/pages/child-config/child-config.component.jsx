@@ -118,7 +118,7 @@ const GameConfig = (props) => {
     );
 };
 
-const colors = ["#116cbc", "#ff3d00", "#9b9b9b", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
+const colors = ["#116cbc", "#ff3d00", "#7986cb", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
 
 export default function ChildConfigPage(props) {
     const [value, setValue] = React.useState(0);

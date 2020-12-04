@@ -122,6 +122,7 @@ const colors = ["#116cbc", "#ff3d00", "#7986cb", "#11bcb7", "#bc6111", "#4089C9"
 
 export default function ChildConfigPage(props) {
     const [value, setValue] = React.useState(0);
+    const [children, setChildren] = React.useState([]);
     const [call, setCall] = React.useState(false);
     const [childInfo, setChildInfo] = React.useState([{name: "Domingo", maxHours: 1},
         {name: "Segunda", maxHours: 0},
@@ -212,7 +213,7 @@ export default function ChildConfigPage(props) {
                         setChildColor(res[i].color);
                     }
                 }
-
+                setChildren(res);
             })
             .catch(err => console.log(err));
 
@@ -254,6 +255,16 @@ export default function ChildConfigPage(props) {
     };
 
     const deleteChild = async () => {
+        if(children.length <= 1) {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `O número de crianças não pode ser inferior a 1.`,
+                success: 1,
+                acceptable: false,
+            });
+            return;
+        }
         const response = await deleteChildren(props.match.params.childId);
         const body = await response.json();
 

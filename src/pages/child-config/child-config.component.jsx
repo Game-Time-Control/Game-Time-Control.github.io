@@ -100,7 +100,7 @@ const ChildConfig = (props) => {
                 </Container>
                 <CalendarContainer>
                     <CustomButton addButton type="submit" onClick={props.handleSubmit}>
-                        Enviar
+                        Salvar
                     </CustomButton>
                 </CalendarContainer>
             </Paper>

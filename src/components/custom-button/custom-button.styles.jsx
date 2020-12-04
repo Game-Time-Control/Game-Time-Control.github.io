@@ -63,12 +63,38 @@ const deleteButtonStyles = css`
     }
 `;
 
+const downloadButtonStyles = css`
+    width: 140px;
+    background-color: #424242;
+    color: rgba(0, 0, 0, 0.87);
+    border: 1.5px solid #e0e0e0;
+    border-radius: 4px;
+    
+    color: #e0e0e0;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 600;
+    line-height: 1.75;
+    border-radius: 4px;
+    letter-spacing: 0.02857em;
+    text-transform: uppercase;
+    
+    &:hover {
+        background-color: #616161;
+    }
+`;
+
 const getButtonStyles = props => {
 
     if (props.addButton) {
         return addButtonStyles;
     } else if (props.deleteButton) {
         return deleteButtonStyles;
+    } else if (props.downloadButton) {
+        return downloadButtonStyles;
     } else {
         return buttonStyles;
     }

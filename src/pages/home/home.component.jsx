@@ -10,10 +10,12 @@ import {Typography} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 
 /* Styles */
-import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons} from "./home.styles";
+import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons, ContainerDownloadButton} from "./home.styles";
 
 /* Api */
 import {getAllChildren} from "../../api/ApiChild";
+import CustomButton from "../../components/custom-button/custom-button.component";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const colors = ["#116cbc", "#ff3d00", "#7986cb", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
 
@@ -63,6 +65,13 @@ export default function Home() {
                         </ContainerChildIcon>
                     ))}
                 </ContainerButtons>
+                <ContainerDownloadButton>
+                    {/*<Tooltip title="Download do client">*/}
+                    {/*    <div>*/}
+                            <CustomButton downloadButton component={Link} to='download'> Download </CustomButton>
+                    {/*    </div>*/}
+                    {/*</Tooltip>*/}
+                </ContainerDownloadButton>
             </MainContainer>
         </div>
     );

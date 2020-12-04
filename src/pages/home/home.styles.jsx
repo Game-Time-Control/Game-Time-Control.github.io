@@ -5,7 +5,7 @@ export const ChildLabel = styled.label`
     font-size: 20px;
 `;
 
-export const ContainerChildIcon = styled.label`
+export const ContainerChildIcon = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -13,7 +13,7 @@ export const ContainerChildIcon = styled.label`
     padding: 20;
 `;
 
-export const MainContainer = styled.label`
+export const MainContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,7 +24,11 @@ export const MainContainer = styled.label`
     height: 93.1vh;
 `;
 
-export const ContainerButtons = styled.label`
+export const ContainerDownloadButton = styled.div`
+    padding: 50px;
+`;
+
+export const ContainerButtons = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;

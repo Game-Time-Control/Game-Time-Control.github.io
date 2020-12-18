@@ -123,12 +123,12 @@ const ChildConfig = (props) => {
                                     {props.days[index].period.map((element, indexSecondary) => (
                                         <div key={indexSecondary} style={{display: 'flex', flexDirection: 'column', fontSize: 12}}>
                                             {indexSecondary === 0 && index === 0? <div>00h</div> :
-                                                indexSecondary === 3 && index === 0? <div>04h</div> :
-                                                    indexSecondary === 7 && index === 0? <div>08h</div> :
-                                                        indexSecondary === 11 && index === 0? <div>12h</div> :
-                                                            indexSecondary === 15 && index === 0? <div>16h</div> :
-                                                                indexSecondary === 19 && index === 0? <div>20h</div> :
-                                                                    indexSecondary === 23 && index === 0? <div>24h</div> :
+                                                indexSecondary === 4 && index === 0? <div>04h</div> :
+                                                    indexSecondary === 8 && index === 0? <div>08h</div> :
+                                                        indexSecondary === 12 && index === 0? <div>12h</div> :
+                                                            indexSecondary === 16 && index === 0? <div>16h</div> :
+                                                                indexSecondary === 20 && index === 0? <div>20h</div> :
+                                                                    indexSecondary === 23 && index === 0? <div>23h</div> :
                                                     <div style={{width: 22, height: 18}}/>}
                                         <PieceOfPeriod isActive={element}
                                                        childColor={props.childColor}

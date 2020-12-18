@@ -23,14 +23,6 @@ import Slider from "@material-ui/core/Slider";
 /* Api */
 import {deleteChildren, getAllChildren, getOneChildren, updateChildren} from "../../api/ApiChild";
 
-const sunday = 0;
-const monday = 1;
-const tuesday = 1;
-const wednesday = 1;
-const thursday = 2;
-const friday = 1;
-const saturday = 1;
-
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -72,37 +64,78 @@ const ChildConfig = (props) => {
     return (
         <TabPanel value={props.value} index={props.CHILD}>
             <TitleContainer>
-                <Typography variant="h5">Gerencie o Máximo de horas diárias de <b>{props.childName}</b></Typography>
+                <Typography variant="h5">Gerencie o tempo permitido de <b>{props.childName}</b></Typography>
             </TitleContainer>
-            <Paper variant="outlined">
-                <Container>
+            <Paper variant="outlined" style={{overflow: 'auto', minWidth: 780, padding: 30}}>
+                <Container style={{paddingBottom: 20, paddingTop: 20}}>
                     {props.days.map((day, index) => (
                         props.call ?
                         <CalendarContainer key={index}>
-                            <Typography id="discrete-slider" gutterBottom>
-                                {day.name}
-                            </Typography>
+                            {(index === 0) ?
+                                <div style={{display: 'flex', flexDirection: 'column'}}>
+                                    <Typography id="discrete-slider" style={{width: 75, fontWeight: 'bold', paddingBottom: 8}}>
+                                        Dias
+                                    </Typography>
+                                    <Typography id="discrete-slider" style={{width: 75}}>
+                                        {day.name}
+                                    </Typography>
+                                </div>
+                                :
+                                <Typography id="discrete-slider" style={{width: 75}}>
+                                    {day.name}
+                                </Typography>
+                            }
                             <ConfigContainer>
-                                <Slider
-                                    value={props.days[index].maxHours}
-                                    min={0}
-                                    step={1}
-                                    max={24}
-                                    marks
-                                    onChange={(event,value) => props.handleChangeSlider(event, value,index)}
-                                    getAriaValueText={valuetext}
-                                    aria-labelledby="discrete-slider"
-                                    valueLabelDisplay="auto"
-                                    style={{width: '15vw', color: props.childColor}}
-                                />
+                                {(index === 0) ?
+                                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        <Typography id="discrete-slider"  style={{ fontWeight: 'bold', paddingBottom: 8}}>
+                                            Tempo Limite
+                                        </Typography>
+                                        <Slider
+                                            value={props.days[index].maxHours}
+                                            min={0}
+                                            step={1}
+                                            max={24}
+                                            marks
+                                            onChange={(event,value) => props.handleChangeSlider(event, value,index)}
+                                            getAriaValueText={valuetext}
+                                            aria-labelledby="discrete-slider"
+                                            valueLabelDisplay="auto"
+                                            style={{width: '15vw', color: props.childColor}}
+                                        />
+                                    </div>
+                                    :
+                                    <Slider
+                                        value={props.days[index].maxHours}
+                                        min={0}
+                                        step={1}
+                                        max={24}
+                                        marks
+                                        onChange={(event,value) => props.handleChangeSlider(event, value,index)}
+                                        getAriaValueText={valuetext}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="auto"
+                                        style={{width: '15vw', color: props.childColor}}
+                                    />
+                                }
+
                                 <PeriodContainer onMouseLeave={props.disableToggle} key={index}>
                                     {props.days[index].period.map((element, indexSecondary) => (
+                                        <div key={indexSecondary} style={{display: 'flex', flexDirection: 'column', fontSize: 12}}>
+                                            {indexSecondary === 0 && index === 0? <div>00h</div> :
+                                                indexSecondary === 3 && index === 0? <div>04h</div> :
+                                                    indexSecondary === 7 && index === 0? <div>08h</div> :
+                                                        indexSecondary === 11 && index === 0? <div>12h</div> :
+                                                            indexSecondary === 15 && index === 0? <div>16h</div> :
+                                                                indexSecondary === 19 && index === 0? <div>20h</div> :
+                                                                    indexSecondary === 23 && index === 0? <div>24h</div> :
+                                                    <div style={{width: 22, height: 18}}/>}
                                         <PieceOfPeriod isActive={element}
                                                        childColor={props.childColor}
                                                        onMouseDown={(event) => props.enableToggle(event, element, index, indexSecondary)}
                                                        onMouseUp={props.disableToggle}
-                                                       onMouseEnter={(event) => props.select(event, element, index, indexSecondary)}
-                                                       key={indexSecondary}/>
+                                                       onMouseEnter={(event) => props.select(event, element, index, indexSecondary)}/>
+                                        </div>
                                     ))}
                                 </PeriodContainer>
                             </ConfigContainer>
@@ -154,7 +187,6 @@ export default function ChildConfigPage(props) {
     });
     const [mouseEvent, setMouseEvent] = React.useState(false);
     const [childColor, setChildColor] = React.useState('#424242');
-    const [arrayOfConfigs, setArrayOfConfigs] = React.useState([{value: 1, isActive: false}, {value: 2, isActive: false}, {value: 3, isActive: false}, {value: 4, isActive: false}]);
 
     const [tabs] = React.useState({
         CHILD: 0,
@@ -215,7 +247,6 @@ export default function ChildConfigPage(props) {
 
         callApiFindAllChildren("5fbd3c79176adb4148996c2a")
             .then(res => {
-                let temp;
                 for(let i=0, temp=0; i < res.length; i++, temp++) {
                     res[i]["color"] = colors[temp];
                     if(i+1%(colors.length)===0) {
@@ -245,7 +276,7 @@ export default function ChildConfigPage(props) {
                 setCall(true);
             })
             .catch(err => console.log(err));
-    }, [props.match.params.childId, arrayOfConfigs]);
+    }, [props.match.params.childId]);
 
     const handleChangeSlider = (event, value, index) => {
         let daysCopy = [...childInfo];
@@ -336,7 +367,7 @@ export default function ChildConfigPage(props) {
             </AppBar>
             <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider}
                          call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal} childColor={childColor} select={select} enableToggle={enableToggle}
-                         disableToggle={disableToggle} arrayOfConfigs={arrayOfConfigs}/>
+                         disableToggle={disableToggle}/>
             <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
             {popUp.popUp ?
                 <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={deleteChild}

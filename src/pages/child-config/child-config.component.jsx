@@ -8,7 +8,7 @@ import PopUp from "../../components/popup/popup.component";
 import CustomButton from "../../components/custom-button/custom-button.component";
 
 /* Styles */
-import {TitleContainer, CalendarContainer, ContainerDeleteButton} from "./child-config.styles";
+import {TitleContainer, CalendarContainer, ContainerDeleteButton, ConfigContainer, PeriodContainer, PieceOfPeriod} from "./child-config.styles";
 
 /* Material UI */
 import AppBar from "@material-ui/core/AppBar";
@@ -80,20 +80,32 @@ const ChildConfig = (props) => {
                         props.call ?
                         <CalendarContainer key={index}>
                             <Typography id="discrete-slider" gutterBottom>
-                                {day.name} (h)
+                                {day.name}
                             </Typography>
-                            <Slider
-                                value={props.days[index].maxHours}
-                                min={0}
-                                step={1}
-                                max={24}
-                                marks
-                                onChange={(event,value) => props.handleChangeSlider(event, value,index)}
-                                getAriaValueText={valuetext}
-                                aria-labelledby="discrete-slider"
-                                valueLabelDisplay="auto"
-                                style={{width: '15vw', color: props.childColor}}
-                            />
+                            <ConfigContainer>
+                                <Slider
+                                    value={props.days[index].maxHours}
+                                    min={0}
+                                    step={1}
+                                    max={24}
+                                    marks
+                                    onChange={(event,value) => props.handleChangeSlider(event, value,index)}
+                                    getAriaValueText={valuetext}
+                                    aria-labelledby="discrete-slider"
+                                    valueLabelDisplay="auto"
+                                    style={{width: '15vw', color: props.childColor}}
+                                />
+                                <PeriodContainer onMouseLeave={props.disableToggle} key={index}>
+                                    {props.days[index].period.map((element, indexSecondary) => (
+                                        <PieceOfPeriod isActive={element}
+                                                       childColor={props.childColor}
+                                                       onMouseDown={(event) => props.enableToggle(event, element, index, indexSecondary)}
+                                                       onMouseUp={props.disableToggle}
+                                                       onMouseEnter={(event) => props.select(event, element, index, indexSecondary)}
+                                                       key={indexSecondary}/>
+                                    ))}
+                                </PeriodContainer>
+                            </ConfigContainer>
                         </CalendarContainer>
                             : null
                     ))}
@@ -140,7 +152,9 @@ export default function ChildConfigPage(props) {
         success: 1,
         acceptable: true
     });
+    const [mouseEvent, setMouseEvent] = React.useState(false);
     const [childColor, setChildColor] = React.useState('#424242');
+    const [arrayOfConfigs, setArrayOfConfigs] = React.useState([{value: 1, isActive: false}, {value: 2, isActive: false}, {value: 3, isActive: false}, {value: 4, isActive: false}]);
 
     const [tabs] = React.useState({
         CHILD: 0,
@@ -219,20 +233,19 @@ export default function ChildConfigPage(props) {
 
         callApiGetOneChildren(props.match.params.childId)
             .then(res => {
-                let tempChildInfo = [{name: "Domingo", maxHours: res.days[sunday].maxTime},
-                    {name: "Segunda", maxHours: res.days[monday].maxTime},
-                    {name: "Terça", maxHours: res.days[tuesday].maxTime},
-                    {name: "Quarta", maxHours: res.days[wednesday].maxTime},
-                    {name: "Quinta", maxHours: res.days[thursday].maxTime},
-                    {name: "Sexta", maxHours: res.days[friday].maxTime},
-                    {name: "Sábado", maxHours: res.days[saturday].maxTime}]
+                let tempChildInfo = [];
+                let days= ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
+
+                for(let i=0; i<res.days.length;i++) {
+                    tempChildInfo[i] = {name: days[i], maxHours: res.days[i].maxTime, period: res.days[i].period};
+                }
                 setChildInfo(tempChildInfo);
                 setChildName(res.name);
                 setChild(res);
                 setCall(true);
             })
             .catch(err => console.log(err));
-    }, [props.match.params.childId]);
+    }, [props.match.params.childId, arrayOfConfigs]);
 
     const handleChangeSlider = (event, value, index) => {
         let daysCopy = [...childInfo];
@@ -290,6 +303,27 @@ export default function ChildConfigPage(props) {
         }
     }
 
+    const select = (event, element, index, indexSecondary) => {
+        if(mouseEvent) {
+            let configCopy = [...childInfo];
+            configCopy[index].period[indexSecondary] = !element;
+            setChildInfo(configCopy);
+        }
+    };
+
+    const enableToggle = (event, element, index, indexSecondary) => {
+        if(!mouseEvent) {
+            let configCopy = [...childInfo];
+            configCopy[index].period[indexSecondary] = !element;
+            setChildInfo(configCopy);
+        }
+        setMouseEvent(true);
+    };
+
+    const disableToggle = () => {
+        setMouseEvent(false);
+    };
+
     return (
         <div>
             <Header/>
@@ -301,7 +335,8 @@ export default function ChildConfigPage(props) {
                 </Tabs>
             </AppBar>
             <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName} handleChangeSlider={handleChangeSlider}
-                         call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal} childColor={childColor}/>
+                         call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal} childColor={childColor} select={select} enableToggle={enableToggle}
+                         disableToggle={disableToggle} arrayOfConfigs={arrayOfConfigs}/>
             <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
             {popUp.popUp ?
                 <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} acceptable={popUp.acceptable} acceptFunction={deleteChild}

@@ -11,7 +11,18 @@ export const CalendarContainer = styled.div`
     justify-content: space-around;
     align-items: center;
     flex-direction: row;
-    padding: 10px;
+`;
+
+export const Division = styled.div`
+    width: 28px;
+    height: 22px;
+    background-color: #e0e0e0;
+`;
+
+export const DivisionSpotlightLabel = styled.div`
+    background-color: #e0e0e0;
+    text-align: center;
+    border-radius: 2px;
 `;
 
 export const ConfigContainer = styled.div`
@@ -36,7 +47,7 @@ export const PeriodContainer = styled.div`
 export const PieceOfPeriod = styled.div`
     width: 28px; 
     height: 20px;
-    background-color: ${props => props.isActive ? props.childColor : '#bdbdbd'};
+    background-color: ${props => props.isActive ? props.childColor : '#bababa'};
     border: 1px solid #e0e0e0;
     draggable: false;
     user-select: none;

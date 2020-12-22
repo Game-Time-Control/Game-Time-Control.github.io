@@ -28,7 +28,7 @@ export default function Home() {
             const response = await getAllChildren(parent);
             const body = await response.json();
 
-            return body.payload
+            return body
         };
 
         callApiFindAllChildren("5fbd3c79176adb4148996c2a")

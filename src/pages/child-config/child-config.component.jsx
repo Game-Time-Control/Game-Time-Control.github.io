@@ -235,14 +235,14 @@ export default function ChildConfigPage(props) {
             const response = await getAllChildren(parent);
             const body = await response.json();
 
-            return body.payload
+            return body
         };
 
         const callApiGetOneChildren = async (child) => {
             const response = await getOneChildren(child);
             const body = await response.json();
 
-            return body.payload
+            return body
         };
 
         callApiFindAllChildren("5fbd3c79176adb4148996c2a")

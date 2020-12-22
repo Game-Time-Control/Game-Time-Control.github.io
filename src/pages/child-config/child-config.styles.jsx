@@ -13,6 +13,14 @@ export const CalendarContainer = styled.div`
     flex-direction: row;
 `;
 
+export const ActionsContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    padding: 25px;
+`;
+
 export const Division = styled.div`
     width: 28px;
     height: 22px;

@@ -16,7 +16,8 @@ import {
     ConfigContainer,
     PeriodContainer,
     PieceOfPeriod,
-    DivisionSpotlightLabel
+    DivisionSpotlightLabel,
+    ActionsContainer
 } from "./child-config.styles";
 
 /* Material UI */
@@ -86,6 +87,7 @@ const ChildConfig = (props) => {
                                                     style={{width: 75, fontWeight: 'bold', paddingBottom: 35}}>
                                             Dias
                                         </Typography>
+
                                         <Typography id="discrete-slider" style={{width: 75}}>
                                             {day.name}
                                         </Typography>
@@ -167,11 +169,20 @@ const ChildConfig = (props) => {
                             : null
                     ))}
                 </Container>
-                <CalendarContainer>
+                <ActionsContainer>
+                    <Typography id="discrete-slider" style={{width: 75, paddingRight: 15}}>
+                        Bloqueado
+                    </Typography>
+                    <PieceOfPeriod isActive={false} childColor={props.childColor}/>
+                    <Typography id="discrete-slider" style={{width: 75, paddingRight: 10, paddingLeft: 30}}>
+                        Permitido</Typography>
+                    <PieceOfPeriod isActive={true} childColor={props.childColor}/>
+                </ActionsContainer>
+                <ActionsContainer>
                     <CustomButton addButton type="submit" onClick={props.handleSubmit}>
                         Salvar
                     </CustomButton>
-                </CalendarContainer>
+                </ActionsContainer>
             </Paper>
             <ContainerDeleteButton>
                 <CustomButton type="button" deleteButton onClick={props.deleteChild}> Deletar </CustomButton>

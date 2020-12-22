@@ -13,6 +13,19 @@ export const CalendarContainer = styled.div`
     flex-direction: row;
 `;
 
+export const Spacer = styled.div`
+    padding-bottom: 35px;
+    @media only screen and (max-width: 1000px) {
+      padding-bottom: 10px;
+    }
+`;
+
+export const BoxContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    min-width: ${props => props.minWidth ? props.minWidth : 'auto'};
+`;
+
 export const ActionsContainer = styled.div`
     display: flex;
     justify-content: center;

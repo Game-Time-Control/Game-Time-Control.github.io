@@ -17,7 +17,9 @@ import {
     PeriodContainer,
     PieceOfPeriod,
     DivisionSpotlightLabel,
-    ActionsContainer
+    ActionsContainer,
+    BoxContainer,
+    Spacer
 } from "./child-config.styles";
 
 /* Material UI */
@@ -76,34 +78,58 @@ const ChildConfig = (props) => {
             <TitleContainer>
                 <Typography variant="h5">Gerencie o tempo permitido de <b>{props.childName}</b></Typography>
             </TitleContainer>
-            <Paper variant="outlined" style={{overflow: 'auto', minWidth: 780, padding: 30}}>
+            <Paper variant="outlined" style={{overflow: 'auto', minWidth: 1000, padding: 30}}>
                 <Container style={{paddingBottom: 20, paddingTop: 20}}>
                     {props.days.map((day, index) => (
                         props.call ?
                             <CalendarContainer key={index}>
                                 {(index === 0) ?
-                                    <div style={{display: 'flex', flexDirection: 'column'}}>
-                                        <Typography id="discrete-slider"
-                                                    style={{width: 75, fontWeight: 'bold', paddingBottom: 35}}>
-                                            Dias
-                                        </Typography>
-
-                                        <Typography id="discrete-slider" style={{width: 75}}>
-                                            {day.name}
-                                        </Typography>
+                                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                                        <Spacer>
+                                            <Typography id="discrete-slider"
+                                                        style={{width: 75, fontWeight: 'bold'}}>
+                                                Dias
+                                            </Typography>
+                                        </Spacer>
+                                        <BoxContainer minWidth="100px">
+                                            <Typography id="discrete-slider" style={{width: 75, position: 'relative'}}>
+                                                {day.name}
+                                            </Typography>
+                                        </BoxContainer>
                                     </div>
                                     :
-                                    <Typography id="discrete-slider" style={{width: 75}}>
-                                        {day.name}
-                                    </Typography>
+                                    <BoxContainer minWidth="100px">
+                                        <Typography id="discrete-slider" style={{width: 75, position: 'relative'}}>
+                                            {day.name}
+                                        </Typography>
+                                    </BoxContainer>
                                 }
                                 <ConfigContainer>
                                     {(index === 0) ?
                                         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end'}}>
-                                            <Typography id="discrete-slider"
-                                                        style={{fontWeight: 'bold', paddingBottom: 35}}>
-                                                Tempo Limite
-                                            </Typography>
+                                            <Spacer>
+                                                <Typography id="discrete-slider"
+                                                            style={{fontWeight: 'bold'}}>
+                                                    Tempo Limite
+                                                </Typography>
+                                            </Spacer>
+                                            <BoxContainer>
+                                                <Slider
+                                                    value={props.days[index].maxHours}
+                                                    min={0}
+                                                    step={1}
+                                                    max={24}
+                                                    marks
+                                                    onChange={(event, value) => props.handleChangeSlider(event, value, index)}
+                                                    getAriaValueText={valuetext}
+                                                    aria-labelledby="discrete-slider"
+                                                    valueLabelDisplay="auto"
+                                                    style={{width: '15vw', color: props.childColor, position: 'relative'}}
+                                                />
+                                            </BoxContainer>
+                                        </div>
+                                        :
+                                        <BoxContainer>
                                             <Slider
                                                 value={props.days[index].maxHours}
                                                 min={0}
@@ -114,22 +140,9 @@ const ChildConfig = (props) => {
                                                 getAriaValueText={valuetext}
                                                 aria-labelledby="discrete-slider"
                                                 valueLabelDisplay="auto"
-                                                style={{width: '15vw', color: props.childColor}}
+                                                style={{width: '15vw', color: props.childColor, position: 'relative'}}
                                             />
-                                        </div>
-                                        :
-                                        <Slider
-                                            value={props.days[index].maxHours}
-                                            min={0}
-                                            step={1}
-                                            max={24}
-                                            marks
-                                            onChange={(event, value) => props.handleChangeSlider(event, value, index)}
-                                            getAriaValueText={valuetext}
-                                            aria-labelledby="discrete-slider"
-                                            valueLabelDisplay="auto"
-                                            style={{width: '15vw', color: props.childColor}}
-                                        />
+                                        </BoxContainer>
                                     }
                                     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                         {(index === 0) ?

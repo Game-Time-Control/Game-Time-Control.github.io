@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Link} from 'react-router-dom';
 
 /* Material UI */
@@ -15,8 +15,16 @@ import {useStyles} from "./header.styles"
 import {ReactComponent as LogOut} from '../../assets/log-out.svg';
 import {ReactComponent as Settings} from '../../assets/settings.svg';
 
+/* Context */
+import {authContext} from "../../contexts/AuthContext";
+
 export default function Header() {
     const classes = useStyles();
+    const {setAuthData} = useContext(authContext);
+
+    const onLogOut = () => {
+        setAuthData(null);
+    }; //clearing the context
 
     return (
         <div className={classes.root}>
@@ -36,7 +44,7 @@ export default function Header() {
                         color="inherit"
                         aria-label="open drawer"
                         component={Link}
-                        to='/'
+                        to='/home'
                     >
                         <img alt='logo' style={{width: 270, height: 55}}
                              src={require('../../assets/timeControlInLine.png')}/>
@@ -47,7 +55,7 @@ export default function Header() {
                     <IconButton component={Link} to='/settings'>
                         <Settings className={classes.icons}/>
                     </IconButton>
-                    <IconButton component={Link} to='/logout'>
+                    <IconButton component={Button} onClick={onLogOut}>
                         <LogOut className={classes.icons}/>
                     </IconButton>
                 </Toolbar>

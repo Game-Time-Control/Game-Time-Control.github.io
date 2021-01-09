@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
 
 /* Styles */
@@ -19,10 +19,15 @@ import PopUp from "../popup/popup.component";
 import {addChildren, getAllChildren} from "../../api/ApiChild";
 import Button from "@material-ui/core/Button";
 
+/* Context */
+import {authContext} from "../../contexts/AuthContext";
+
 const colors = ["#116cbc", "#ff3d00", "#7986cb", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
 
 export default function Subheader() {
     const classes = useStyles();
+
+    const { auth } = useContext(authContext);
 
     const [children, setChildren] = React.useState([]);
     const [name, setName] = React.useState('');
@@ -47,7 +52,7 @@ export default function Subheader() {
             return body
         };
 
-        callApiFindAllChildren("5fbd3c79176adb4148996c2a")
+        callApiFindAllChildren(auth.data.user.userId)
             .then(res => {
                 let temp;
                 for(let i=0, temp=0; i < res.length; i++, temp++) {
@@ -101,7 +106,7 @@ export default function Subheader() {
 
 
         let data = {name: name};
-        const response = await addChildren("5fbd3c79176adb4148996c2a", data);
+        const response = await addChildren(auth.data.user.userId, data);
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);

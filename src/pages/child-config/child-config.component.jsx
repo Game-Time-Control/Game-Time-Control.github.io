@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import PropTypes from "prop-types";
 
 /* Components */
@@ -34,6 +34,9 @@ import Slider from "@material-ui/core/Slider";
 
 /* Api */
 import {deleteChildren, getAllChildren, getOneChildren, updateChildren} from "../../api/ApiChild";
+
+/* Context */
+import {authContext} from "../../contexts/AuthContext";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -241,6 +244,8 @@ export default function ChildConfigPage(props) {
         GAME: 1
     });
 
+    const { auth } = useContext(authContext);
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -254,7 +259,7 @@ export default function ChildConfigPage(props) {
 
         let data = tempChild;
 
-        const response = await updateChildren("5fbd3c79176adb4148996c2a", props.match.params.childId, data);
+        const response = await updateChildren(auth.data.user.userId, props.match.params.childId, data);
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
@@ -294,7 +299,7 @@ export default function ChildConfigPage(props) {
             return body
         };
 
-        callApiFindAllChildren("5fbd3c79176adb4148996c2a")
+        callApiFindAllChildren(auth.data.user.userId)
             .then(res => {
                 for (let i = 0, temp = 0; i < res.length; i++, temp++) {
                     res[i]["color"] = colors[temp];

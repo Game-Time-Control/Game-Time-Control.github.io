@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
 
 /* Components */
@@ -9,7 +9,6 @@ import CustomButton from "../../components/custom-button/custom-button.component
 import Button from "@material-ui/core/Button";
 import {Typography} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
-import Tooltip from "@material-ui/core/Tooltip";
 
 /* Styles */
 import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons, ContainerDownloadButton} from "./home.styles";
@@ -18,10 +17,14 @@ import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons, Contain
 import {getAllChildren} from "../../api/ApiChild";
 import {downloadClient} from "../../api/Api";
 
+/* Context */
+import {authContext} from "../../contexts/AuthContext";
+
 const colors = ["#116cbc", "#ff3d00", "#7986cb", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
 
 export default function Home() {
     const [children, setChildren] = React.useState([]);
+    const { auth } = useContext(authContext);
 
     useEffect(() => {
         const callApiFindAllChildren = async (parent) => {
@@ -31,9 +34,8 @@ export default function Home() {
             return body
         };
 
-        callApiFindAllChildren("5fbd3c79176adb4148996c2a")
+        callApiFindAllChildren(auth.data.user.userId)
             .then(res => {
-                let temp;
                 for(let i=0, temp=0; i < res.length; i++, temp++) {
                     res[i]["color"] = colors[temp];
                     if(i+1%(colors.length)===0) {

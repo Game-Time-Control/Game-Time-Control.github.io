@@ -1,4 +1,5 @@
 export const apiUrl = "https://time-control-server.herokuapp.com";
+// export const apiUrl = "http://localhost:4242";
 
 export function downloadClient() {
     setTimeout(() => {

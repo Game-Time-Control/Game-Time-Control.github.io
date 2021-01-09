@@ -416,7 +416,7 @@ export default function ChildConfigPage(props) {
             <AppBar position="static">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
                     <Tab label="Calendário" {...a11yProps(0)} />
-                    <Tab label="Jogos" {...a11yProps(1)} />
+                    {/*<Tab label="Jogos" {...a11yProps(1)} />*/}
                 </Tabs>
             </AppBar>
             <ChildConfig value={value} index={tabs.CHILD} CHILD={tabs.CHILD} days={childInfo} childName={childName}
@@ -424,7 +424,7 @@ export default function ChildConfigPage(props) {
                          call={call} handleSubmit={handleSubmit} deleteChild={deleteChildModal} childColor={childColor}
                          select={select} enableToggle={enableToggle}
                          disableToggle={disableToggle}/>
-            <GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>
+            {/*<GameConfig value={value} index={tabs.GAME} GAME={tabs.GAME}/>*/}
             {popUp.popUp ?
                 <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route}
                        acceptable={popUp.acceptable} acceptFunction={deleteChild}

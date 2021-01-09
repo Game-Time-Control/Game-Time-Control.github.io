@@ -2,10 +2,12 @@ import React, {useEffect} from 'react'
 import {Link} from "react-router-dom";
 
 /* Styles */
-import {SignInContainer, SignInLogo, AlignContainer, SignInContainerInside, ButtonsBarContainer, FormInputContainer, FormInputLabel, GroupContainer, Title} from './register.styles'
+import {SignInContainer, SignInLogo, AlignContainer, SignInContainerInside, ButtonsBarContainer, Row, Subtitle, FormInputContainer, FormInputLabel, GroupContainer, Title} from './register.styles'
 
 /* Material UI */
 import Container from "@material-ui/core/Container";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
 
 /* Icon */
 import TimeControl from "../../assets/timeControl.png";
@@ -13,6 +15,11 @@ import TimeControl from "../../assets/timeControl.png";
 /* Components */
 import CustomButton from "../../components/custom-button/custom-button.component";
 import PopUp from "../../components/popup/popup.component";
+
+/* Icon */
+import {ReactComponent as More} from "../../assets/plus.svg";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 function FormInput({ handleChange, label, ...otherProps }) {
     return (
@@ -32,6 +39,7 @@ export default function RegisterPage() {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [repeatPassword, setRepeatPassword] = React.useState('');
+    const [children, setChildren] = React.useState(['']);
 
     const [popUp, setPopUp] = React.useState({
         popUp: false,
@@ -41,14 +49,31 @@ export default function RegisterPage() {
         acceptable: true
     });
 
+    const addInputButton = event => {
+        event.preventDefault();
+        setChildren([...children, '']);
+    };
+
+    const handleChangeChildren = (event, index) => {
+        children[index] = event.target.value;
+        setChildren([...children]);
+    };
+
+    const handleChangeInputRemove = (e, position) => {
+        if(children.length > 1) {
+            setChildren([...children.filter((children, index) => index !== position)])
+        }
+    }
 
     useEffect(() => {
+        console.log(children)
         document.body.style.background = "#a7c8ff";
         // Specify how to clean up after this effect:
         return function cleanup() {
             document.body.style.backgroundImage = "none";
         };
-    }, []);
+
+    }, [children]);
 
     const handleSubmit = async event => {
         event.preventDefault();
@@ -81,6 +106,13 @@ export default function RegisterPage() {
         // }
     };
 
+    const styles = {
+        largeIcon: {
+            width: 60,
+            height: 60,
+        },
+    };
+
     const handleChange = event => {
         const {value, name} = event.target;
         if (name === 'password')
@@ -100,9 +132,9 @@ export default function RegisterPage() {
                     <SignInContainerInside>
                         <SignInLogo src={TimeControl}/>
                         <Title> Novo cadastro </Title>
-
+                        <Subtitle> Meus dados </Subtitle>
                         <form onSubmit={handleSubmit}>
-                            <div style={{width: '250px'}}>
+                            <div >
                                 <FormInput
                                     name='name'
                                     type='text'
@@ -137,6 +169,36 @@ export default function RegisterPage() {
                                     required
                                     autocomplete="new-password"
                                 />
+                                <Subtitle> Minhas crianças </Subtitle>
+                                {
+                                    children.map((child, index) => (
+                                        <Row key={index}>
+                                            <div>
+                                                <FormInput
+                                                name={`name-${index}`}
+                                                type='text'
+                                                value={child}
+                                                handleChange={(e) => handleChangeChildren(e, index)}
+                                                label={`Nome da criança ${index+1}`}
+                                                required
+                                                />
+                                            </div>
+                                            <IconButton component={Button} onClick={(e) => handleChangeInputRemove(e, index)}>
+                                                <Tooltip title="Deletar criança">
+                                                    <DeleteIcon style={{width: 30, height: 30, fill: '#424242'}}/>
+                                                </Tooltip>
+                                            </IconButton>
+
+                                        </Row>
+                                    ))
+                                }
+                                <ButtonsBarContainer>
+                                    <IconButton component={Button} onClick={addInputButton}>
+                                        <Tooltip title="Adicionar criança">
+                                            <More style={{width: 45, height: 45, fill: '#424242'}}/>
+                                        </Tooltip>
+                                    </IconButton>
+                                </ButtonsBarContainer>
                                 <ButtonsBarContainer>
                                     <CustomButton type='submit' addButton> Cadastrar </CustomButton>
                                 </ButtonsBarContainer>

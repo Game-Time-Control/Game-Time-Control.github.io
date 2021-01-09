@@ -52,9 +52,9 @@ export default function Header() {
                     <Typography className={classes.title} variant="h6" noWrap>
 
                     </Typography>
-                    <IconButton component={Link} to='/settings'>
-                        <Settings className={classes.icons}/>
-                    </IconButton>
+                    {/*<IconButton component={Link} to='/settings'>*/}
+                    {/*    <Settings className={classes.icons}/>*/}
+                    {/*</IconButton>*/}
                     <IconButton component={Button} onClick={onLogOut}>
                         <LogOut className={classes.icons}/>
                     </IconButton>

@@ -2,14 +2,14 @@ import styled, { css }  from 'styled-components/macro';
 
 export const SignInContainer = styled.div`
     min-width: 500px;
-    height: 40vw;
+    height: 100%;
     border-radius: 10px;
     background-color: white;
     display: flex;
     min-height: 520px;
     box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
     border-radius: 4px;
-    overflow: hidden;
+    padding: 20px;
     display: flex;
     justify-content: center;
     color: rgba(0, 0, 0, 0.87);
@@ -34,7 +34,8 @@ export const AlignContainer = styled.div`
     align-items: center;
     align-self: center;
     flex-direction: column;
-    padding-top: 15vh;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
 `;
 
 const subColor = '#bdbdbd';
@@ -65,7 +66,7 @@ export const FormInputContainer = styled.input`
     height: 23px;
     border-radius: 5px;
     border: 1px solid ${subColor};
-    margin: 25px 0;
+    margin: 12px 0;
    
     
     &:focus {
@@ -110,7 +111,7 @@ export const SignInContainerInside = styled.div`
 export const ButtonsBarContainer = styled.div`
     display: flex;
     justify-content: center;
-    margin: 5px;
+    margin: 20px;
 `;
 
 export const SignInLogo = styled.img`
@@ -132,5 +133,19 @@ export const Title = styled.h2`
   color: #424242;
   margin-bottom: 1vw;
   font-weight: normal;
+`;
+
+export const Subtitle = styled.h3`
+  text-align: center;
+  color: #424242;
+  margin-bottom: 1vw;
+  font-weight: normal;
+`;
+
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
 

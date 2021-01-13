@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {Link} from "react-router-dom";
 
 /* Styles */
-import {SignInContainer, SignInLogo, AlignContainer, SignInContainerInside, ButtonsBarContainer, Row, Subtitle, FormInputContainer, FormInputLabel, GroupContainer, Title} from './register.styles'
+import {ContainerInput, SignInContainer, SignInLogo, AlignContainer, SignInContainerInside, ButtonsBarContainer, Row, Subtitle, FormInputContainer, FormInputLabel, GroupContainer, Title} from './register.styles'
 
 /* Material UI */
 import Container from "@material-ui/core/Container";
@@ -17,9 +17,12 @@ import CustomButton from "../../components/custom-button/custom-button.component
 import PopUp from "../../components/popup/popup.component";
 
 /* Icon */
-import {ReactComponent as More} from "../../assets/plus.svg";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
+
+/* Api */
+import {register} from "../../api/ApiParent";
 
 function FormInput({ handleChange, label, ...otherProps }) {
     return (
@@ -46,7 +49,6 @@ export default function RegisterPage() {
         popUpTitle: "",
         popUpText: "",
         success: 1,
-        acceptable: true
     });
 
     const addInputButton = event => {
@@ -60,6 +62,15 @@ export default function RegisterPage() {
     };
 
     const handleChangeInputRemove = (e, position) => {
+        if(children.length <= 1) {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Pelo menos uma criança deve ser cadastrada.`,
+                success: 1,
+            });
+            return;
+        }
         if(children.length > 1) {
             setChildren([...children.filter((children, index) => index !== position)])
         }
@@ -77,40 +88,61 @@ export default function RegisterPage() {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        // try {
-        // let user = await login(email, password);
+        let hasNoName = false;
+        let tempChildren = [];
+        for(let i=0; i<children.length; i++) {
+            if(children[i] === '') {
+                hasNoName = true;
+            }
+            tempChildren.push({name: children[i]});
+        }
 
-        // if(user.error) {
-        //     setPopupTitle('Erro');
-        //     if(user.message === "This user is deactivated")
-        //         setPopupText('Não é possível acessar o sistema com este usuário, ele está desativado.');
-        //     else
-        //         setPopupText('Verifique seu email e senha');
-        //     setPopup(true);
-        //     setSuccess(1);
-        // } else if (user.token) {
-        //     setAuthData({
-        //         token: user.token,
-        //         user: user.data.data,
-        //         system: props.systemType
-        //     });
-        //
-        //     if(props.systemType)
-        //         history.replace('/ipa');
-        //     else
-        //         history.replace('/dashboard');
-        //     }
-        //
-        // } catch (error) {
-        //     console.log(error);
-        // }
-    };
+        if(hasNoName) {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Criança precisa ter um nome`,
+                success: 1,
+            });
+            return;
+        }
 
-    const styles = {
-        largeIcon: {
-            width: 60,
-            height: 60,
-        },
+        if(password !== repeatPassword) {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `As senhas devem ser iguais.`,
+                success: 1,
+            });
+            return;
+        }
+        debugger
+        let data = {parentName: name,
+                    email: email,
+                    password: password,
+                    children: [...tempChildren]}
+
+        const response = await register(data);
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.message);
+
+        if(response.status === 200){
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Aviso",
+                popUpText: `Registrado com sucesso.`,
+                success: 1,
+                route: "/login"
+            });
+        } else {
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Registro não efetuado.`,
+                success: 1,
+            });
+        }
     };
 
     const handleChange = event => {
@@ -135,40 +167,48 @@ export default function RegisterPage() {
                         <Subtitle> Meus dados </Subtitle>
                         <form onSubmit={handleSubmit}>
                             <div >
-                                <FormInput
-                                    name='name'
-                                    type='text'
-                                    handleChange={handleChange}
-                                    value={name}
-                                    label='Nome'
-                                    required
-                                />
-                                <FormInput
-                                    name='email'
-                                    type='email'
-                                    handleChange={handleChange}
-                                    value={email}
-                                    label='Email'
-                                    required
-                                />
-                                <FormInput
-                                    name='password'
-                                    type='password'
-                                    value={password}
-                                    handleChange={handleChange}
-                                    label='Senha'
-                                    required
-                                    autocomplete="new-password"
-                                />
-                                <FormInput
-                                    name='repeatPassword'
-                                    type='password'
-                                    value={repeatPassword}
-                                    handleChange={handleChange}
-                                    label='Repita a senha'
-                                    required
-                                    autocomplete="new-password"
-                                />
+                                <ContainerInput>
+                                    <FormInput
+                                        name='name'
+                                        type='text'
+                                        handleChange={handleChange}
+                                        value={name}
+                                        label='Nome'
+                                        required
+                                    />
+                                </ContainerInput>
+                                <ContainerInput>
+                                    <FormInput
+                                        name='email'
+                                        type='email'
+                                        handleChange={handleChange}
+                                        value={email}
+                                        label='Email'
+                                        required
+                                    />
+                                </ContainerInput>
+                                <ContainerInput>
+                                    <FormInput
+                                        name='password'
+                                        type='password'
+                                        value={password}
+                                        handleChange={handleChange}
+                                        label='Senha'
+                                        required
+                                        autocomplete="new-password"
+                                    />
+                                </ContainerInput>
+                                <ContainerInput>
+                                    <FormInput
+                                        name='repeatPassword'
+                                        type='password'
+                                        value={repeatPassword}
+                                        handleChange={handleChange}
+                                        label='Repita a senha'
+                                        required
+                                        autocomplete="new-password"
+                                    />
+                                </ContainerInput>
                                 <Subtitle> Minhas crianças </Subtitle>
                                 {
                                     children.map((child, index) => (
@@ -192,13 +232,16 @@ export default function RegisterPage() {
                                         </Row>
                                     ))
                                 }
-                                <ButtonsBarContainer>
-                                    <IconButton component={Button} onClick={addInputButton}>
-                                        <Tooltip title="Adicionar criança">
-                                            <More style={{width: 45, height: 45, fill: '#424242'}}/>
-                                        </Tooltip>
-                                    </IconButton>
-                                </ButtonsBarContainer>
+                                <div style={{display: 'flex', justifyContent: 'center'}}>
+                                    <CustomButton type='button' discreetButton onClick={addInputButton}>
+                                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                                            <div style={{paddingRight: 5}}>
+                                                Adicionar criança
+                                            </div>
+                                        <AddIcon style={{width: 22, height: 22, fill: '#424242'}}/>
+                                        </div>
+                                    </CustomButton>
+                                </div>
                                 <ButtonsBarContainer>
                                     <CustomButton type='submit' addButton> Cadastrar </CustomButton>
                                 </ButtonsBarContainer>
@@ -207,8 +250,8 @@ export default function RegisterPage() {
                                 </ButtonsBarContainer>
                             </div>
                         </form>
-                        {/*{ popup ?*/}
-                        {/*    <PopUp title={popupTitle} string={popupText} success={success}/> : null}*/}
+                        {popUp.popUp ?
+                        <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route}/> : null}
                     </SignInContainerInside>
                 </SignInContainer>
             </AlignContainer>

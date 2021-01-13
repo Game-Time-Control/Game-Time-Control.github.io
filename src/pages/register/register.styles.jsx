@@ -55,6 +55,10 @@ export const GroupContainer = styled.div`
   }
 `;
 
+export const ContainerInput = styled.div`
+  padding-bottom: 2px;
+`;
+
 export const FormInputContainer = styled.input`
     max-width: 500px;
     background-color: white;

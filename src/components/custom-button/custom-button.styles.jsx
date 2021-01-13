@@ -87,6 +87,29 @@ const downloadButtonStyles = css`
     }
 `;
 
+const addDiscreetButtonStyles = css`
+    width: 140px;
+    background-color: #fff;
+    color: #aeaeae;
+    border: none;
+    border-radius: 4px;
+    
+    width: auto;
+    text-transform: none;
+    color: #9e9e9e;
+    text-align: center;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    line-height: 1.75;
+    border-radius: 4px;
+    letter-spacing: 0.02857em;
+    margin: 0;
+    
+    &:hover {
+        color: #616161;
+    }
+`;
+
 const getButtonStyles = props => {
 
     if (props.addButton) {
@@ -95,7 +118,10 @@ const getButtonStyles = props => {
         return deleteButtonStyles;
     } else if (props.downloadButton) {
         return downloadButtonStyles;
-    } else {
+    } else if (props.discreetButton) {
+    return addDiscreetButtonStyles;
+}
+else {
         return buttonStyles;
     }
 

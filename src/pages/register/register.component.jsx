@@ -116,7 +116,7 @@ export default function RegisterPage() {
             });
             return;
         }
-        debugger
+
         let data = {parentName: name,
                     email: email,
                     password: password,

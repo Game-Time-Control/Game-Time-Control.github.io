@@ -77,7 +77,6 @@ export default function RegisterPage() {
     }
 
     useEffect(() => {
-        console.log(children)
         document.body.style.background = "#a7c8ff";
         // Specify how to clean up after this effect:
         return function cleanup() {
@@ -123,6 +122,16 @@ export default function RegisterPage() {
                     children: [...tempChildren]}
 
         const response = await register(data);
+        if(response.status === 422){
+            setPopUp({
+                popUp: true,
+                popUpTitle: "Erro",
+                popUpText: `Já existe um usuário cadastrado com esse email.`,
+                success: 1,
+            });
+            return;
+        }
+
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
@@ -132,7 +141,7 @@ export default function RegisterPage() {
                 popUp: true,
                 popUpTitle: "Aviso",
                 popUpText: `Registrado com sucesso.`,
-                success: 1,
+                success: 2,
                 route: "/login"
             });
         } else {

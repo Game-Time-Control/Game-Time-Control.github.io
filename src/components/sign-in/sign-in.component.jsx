@@ -27,6 +27,7 @@ import TimeControl from "../../assets/timeControl.png";
 import {authContext} from "../../contexts/AuthContext";
 
 import PropTypes from "prop-types";
+import {login} from "../../api/ApiParent";
 
 function FormInput({ handleChange, label, ...otherProps }) {
     return (
@@ -53,47 +54,39 @@ export default function SignIn(props) {
 
     let history = useHistory();
 
-    const [popup, setPopup] = React.useState(false);
-    const [popupText, setPopupText] = React.useState('');
-    const [popupTitle, setPopupTitle] = React.useState('');
-    const [success, setSuccess] = React.useState(1);
+    const [popUp, setPopUp] = React.useState({
+        popUp: false,
+        popUpTitle: "",
+        popUpText: "",
+        success: 1,
+    });
 
 
     const handleSubmit = async event => {
         event.preventDefault();
-            setAuthData({
-                token: true,
-                user: {userId: '5fbd3c79176adb4148996c2a'},
-                system: props.systemType
-            });
-        history.replace('/home');
-        // try {
-            // let user = await login(email, password);
+        try {
+            let user = await login(email, password);
 
-            // if(user.error) {
-            //     setPopupTitle('Erro');
-            //     if(user.message === "This user is deactivated")
-            //         setPopupText('Não é possível acessar o sistema com este usuário, ele está desativado.');
-            //     else
-            //         setPopupText('Verifique seu email e senha');
-            //     setPopup(true);
-            //     setSuccess(1);
-            // } else if (user.token) {
-            //     setAuthData({
-            //         token: user.token,
-            //         user: user.data.data,
-            //         system: props.systemType
-            //     });
-            //
-            //     if(props.systemType)
-            //         history.replace('/ipa');
-            //     else
-            //         history.replace('/dashboard');
-        //     }
-        //
-        // } catch (error) {
-        //     console.log(error);
-        // }
+            if(user.status === 200) {
+                const body = await user.json();
+                setAuthData({
+                    // token: body.token,
+                    user: body.data,
+                });
+
+                history.replace('/home');
+            } else {
+                setPopUp({
+                    popUp: true,
+                    popUpTitle: "Erro",
+                    popUpText: `Verifique seu email e senha.`,
+                    success: 1,
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleChange = event => {
@@ -137,8 +130,8 @@ export default function SignIn(props) {
                     </ButtonsBarContainer>
                 </div>
             </form>
-            { popup ?
-                <PopUp title={popupTitle} string={popupText} success={success}/> : null}
+            { popUp.popUp ?
+                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success}/> : null}
         </SignInContainer>
 
     );

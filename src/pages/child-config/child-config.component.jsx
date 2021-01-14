@@ -217,6 +217,8 @@ const GameConfig = (props) => {
 const colors = ["#116cbc", "#ff3d00", "#7986cb", "#11bcb7", "#bc6111", "#4089C9", "#616161", "#2C8C89"];
 
 export default function ChildConfigPage(props) {
+    const { auth } = useContext(authContext);
+
     const [value, setValue] = React.useState(0);
     const [children, setChildren] = React.useState([]);
     const [call, setCall] = React.useState(false);
@@ -244,8 +246,6 @@ export default function ChildConfigPage(props) {
         GAME: 1
     });
 
-    const { auth } = useContext(authContext);
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -259,7 +259,7 @@ export default function ChildConfigPage(props) {
 
         let data = tempChild;
 
-        const response = await updateChildren(auth.data.user.userId, props.match.params.childId, data);
+        const response = await updateChildren(auth.data.user.token, auth.data.user.userId, props.match.params.childId, data);
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);
@@ -285,21 +285,45 @@ export default function ChildConfigPage(props) {
     };
 
     useEffect(() => {
-        const callApiFindAllChildren = async (parent) => {
-            const response = await getAllChildren(parent);
+        const callApiFindAllChildren = async (token, parent) => {
+            const response = await getAllChildren(token, parent);
+            if(response.status !== 200) {
+                setPopUp({
+                    popUp: true,
+                    popUpTitle: "Erro",
+                    popUpText: "Algo estranho aconteceu, por favor faça login novamente.",
+                    success: 2,
+                    route: "/login",
+                    acceptable: true
+                })
+                return;
+            }
             const body = await response.json();
 
             return body
         };
 
-        const callApiGetOneChildren = async (child) => {
-            const response = await getOneChildren(child);
+        const callApiGetOneChildren = async (token, child) => {
+            const response = await getOneChildren(token, child);
+
+            if(response.status !== 200) {
+                setPopUp({
+                    popUp: true,
+                    popUpTitle: "Erro",
+                    popUpText: "Algo estranho aconteceu, por favor faça login novamente.",
+                    success: 2,
+                    route: "/login",
+                    acceptable: true
+                })
+                return;
+            }
+
             const body = await response.json();
 
             return body
         };
 
-        callApiFindAllChildren(auth.data.user.userId)
+        callApiFindAllChildren(auth.data.user.token, auth.data.user.userId)
             .then(res => {
                 for (let i = 0, temp = 0; i < res.length; i++, temp++) {
                     res[i]["color"] = colors[temp];
@@ -316,7 +340,7 @@ export default function ChildConfigPage(props) {
             })
             .catch(err => console.log(err));
 
-        callApiGetOneChildren(props.match.params.childId)
+        callApiGetOneChildren(auth.data.user.token, props.match.params.childId)
             .then(res => {
                 let tempChildInfo = [];
                 let days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
@@ -363,10 +387,9 @@ export default function ChildConfigPage(props) {
             });
             return;
         }
-        const response = await deleteChildren(props.match.params.childId);
-        const body = await response.json();
+        const response = await deleteChildren(auth.data.user.token, props.match.params.childId);
 
-        if (response.status !== 200) throw Error(body.message);
+        // if (response.status !== 200) throw Error(body.message);
 
         if (response.status === 200) {
             setPopUp({
@@ -375,7 +398,7 @@ export default function ChildConfigPage(props) {
                 popUpText: `Criança deletada com sucesso.`,
                 success: 2,
                 acceptable: false,
-                route: `/`
+                route: `/home`
             });
         } else {
             setPopUp({

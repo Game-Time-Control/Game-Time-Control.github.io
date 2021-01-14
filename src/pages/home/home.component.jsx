@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 /* Components */
 import Header from "../../components/header/header.component";
 import CustomButton from "../../components/custom-button/custom-button.component";
+import PopUp from "../../components/popup/popup.component";
 
 /* Material UI */
 import Button from "@material-ui/core/Button";
@@ -26,15 +27,34 @@ export default function Home() {
     const [children, setChildren] = React.useState([]);
     const { auth } = useContext(authContext);
 
+    const [popUp, setPopUp] = React.useState({
+        popUp: false,
+        popUpTitle: "Erro",
+        popUpText: "Algo estranho aconteceu, por favor faça login novamente.",
+        success: 1
+    });
+
     useEffect(() => {
-        const callApiFindAllChildren = async (parent) => {
-            const response = await getAllChildren(parent);
+        const callApiFindAllChildren = async (token, parent) => {
+            const response = await getAllChildren(token, parent);
+
+            if(response.status !== 200) {
+                setPopUp({
+                    popUp: true,
+                    popUpTitle: "Erro",
+                    popUpText: "Algo estranho aconteceu, por favor faça login novamente.",
+                    success: 2,
+                    route: "/login"
+                })
+                return;
+            }
+
             const body = await response.json();
 
             return body
         };
 
-        callApiFindAllChildren(auth.data.user.userId)
+        callApiFindAllChildren(auth.data.user.token, auth.data.user.userId)
             .then(res => {
                 for(let i=0, temp=0; i < res.length; i++, temp++) {
                     res[i]["color"] = colors[temp];
@@ -54,6 +74,8 @@ export default function Home() {
     return (
         <div>
             <Header/>
+            { popUp.popUp ?
+                <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route}/> : null}
             <MainContainer>
                 <Typography variant="h5" component="h4" style={{paddingBottom: 50}}> Deseja configurar qual criança?</Typography>
                 <ContainerButtons>

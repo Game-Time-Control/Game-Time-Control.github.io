@@ -1,11 +1,11 @@
 import {apiUrl} from "./Api";
 
-export function getAllChildren(parent) {
-
+export function getAllChildren(auth, parent) {
     const requestOptions = {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'x-access-token': auth
         }
     };
 
@@ -18,12 +18,13 @@ export function getAllChildren(parent) {
 
 }
 
-export function getOneChildren(child) {
+export function getOneChildren(auth, child) {
 
     const requestOptions = {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'x-access-token': auth
         }
     };
 
@@ -36,12 +37,13 @@ export function getOneChildren(child) {
 
 }
 
-export function addChildren(parent, data) {
+export function addChildren(auth, parent, data) {
 
     const requestOptions = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'x-access-token': auth
         },
         body: JSON.stringify({
             name: data.name,
@@ -57,12 +59,13 @@ export function addChildren(parent, data) {
 
 }
 
-export function updateChildren(parent, child, data) {
+export function updateChildren(auth, parent, child, data) {
 
     const requestOptions = {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'x-access-token': auth
         },
         body: JSON.stringify(data)
     };
@@ -76,11 +79,12 @@ export function updateChildren(parent, child, data) {
 
 }
 
-export function deleteChildren(child) {
+export function deleteChildren(auth, child) {
     const requestOptions = {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
+            'x-access-token': auth
         },
     };
 

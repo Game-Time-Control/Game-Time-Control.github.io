@@ -45,16 +45,26 @@ export default function Subheader() {
     });
 
     useEffect(() => {
-        const callApiFindAllChildren = async (parent) => {
-            const response = await getAllChildren(parent);
+        const callApiFindAllChildren = async (token, parent) => {
+            const response = await getAllChildren(token, parent);
+
+            if(response.status !== 200) {
+                setPopUp({
+                    popUp: true,
+                    popUpTitle: "Erro",
+                    popUpText: "Algo estranho aconteceu, por favor faça login novamente.",
+                    success: 2,
+                    route: "/login"
+                })
+                return;
+            }
             const body = await response.json();
 
             return body
         };
 
-        callApiFindAllChildren(auth.data.user.userId)
+        callApiFindAllChildren(auth.data.user.token, auth.data.user.userId)
             .then(res => {
-                let temp;
                 for(let i=0, temp=0; i < res.length; i++, temp++) {
                     res[i]["color"] = colors[temp];
                     if(i+1%(colors.length)===0) {
@@ -106,7 +116,7 @@ export default function Subheader() {
 
 
         let data = {name: name};
-        const response = await addChildren(auth.data.user.userId, data);
+        const response = await addChildren(auth.data.user.token, auth.data.user.userId, data);
         const body = await response.json();
 
         if (response.status !== 200) throw Error(body.message);

@@ -11,12 +11,17 @@ import Button from "@material-ui/core/Button";
 /* Styles */
 import {useStyles} from "./header.styles"
 
+/* Components */
+import CustomButton from "../custom-button/custom-button.component";
+
 /* Icons */
 import {ReactComponent as LogOut} from '../../assets/log-out.svg';
 import {ReactComponent as Settings} from '../../assets/settings.svg';
 
 /* Context */
 import {authContext} from "../../contexts/AuthContext";
+
+import {downloadClient} from "../../api/Api";
 
 export default function Header() {
     const classes = useStyles();
@@ -25,6 +30,10 @@ export default function Header() {
     const onLogOut = () => {
         setAuthData(null);
     }; //clearing the context
+
+    const callApiDownloadClient = async () => {
+        const response = await downloadClient();
+    };
 
     return (
         <div className={classes.root}>
@@ -55,7 +64,8 @@ export default function Header() {
                     {/*<IconButton component={Link} to='/settings'>*/}
                     {/*    <Settings className={classes.icons}/>*/}
                     {/*</IconButton>*/}
-                    <IconButton component={Button} onClick={onLogOut}>
+                    <CustomButton downloadButton type='Button' onClick={callApiDownloadClient}> Download </CustomButton>
+                    <IconButton component={Button} onClick={onLogOut} style={{paddingLeft: 50}}>
                         <LogOut className={classes.icons}/>
                     </IconButton>
                 </Toolbar>

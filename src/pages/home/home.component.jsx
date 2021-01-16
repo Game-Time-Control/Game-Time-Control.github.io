@@ -12,7 +12,7 @@ import {Typography} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 
 /* Styles */
-import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons, ContainerDownloadButton} from "./home.styles";
+import {ChildLabel, ContainerChildIcon, MainContainer, ContainerButtons} from "./home.styles";
 
 /* Api */
 import {getAllChildren} from "../../api/ApiChild";
@@ -94,13 +94,6 @@ export default function Home() {
                         </ContainerChildIcon>
                     ))}
                 </ContainerButtons>
-                <ContainerDownloadButton>
-                    {/*<Tooltip title="Download do client">*/}
-                    {/*    <div>*/}
-                            <CustomButton downloadButton type='Button' onClick={callApiDownloadClient}> Download </CustomButton>
-                    {/*    </div>*/}
-                    {/*</Tooltip>*/}
-                </ContainerDownloadButton>
             </MainContainer>
         </div>
     );

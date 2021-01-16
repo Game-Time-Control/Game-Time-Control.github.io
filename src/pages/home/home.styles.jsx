@@ -24,9 +24,6 @@ export const MainContainer = styled.div`
     height: 93.1vh;
 `;
 
-export const ContainerDownloadButton = styled.div`
-    padding: 50px;
-`;
 
 export const ContainerButtons = styled.div`
     display: flex;

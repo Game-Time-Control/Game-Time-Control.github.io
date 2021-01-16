@@ -74,7 +74,15 @@ export default function SignIn(props) {
                 });
 
                 history.replace('/home');
-            } else {
+            } else if (user.status === 404) {
+                setPopUp({
+                    popUp: true,
+                    popUpTitle: "Erro",
+                    popUpText: `Usuário não cadastrado.`,
+                    success: 1,
+                });
+            }
+            else {
                 setPopUp({
                     popUp: true,
                     popUpTitle: "Erro",

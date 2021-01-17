@@ -28,7 +28,7 @@ export const BoxContainer = styled.div`
 
 export const ActionsContainer = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     flex-direction: row;
     padding: 25px;

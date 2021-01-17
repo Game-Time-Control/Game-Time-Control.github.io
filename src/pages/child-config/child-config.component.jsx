@@ -184,21 +184,24 @@ const ChildConfig = (props) => {
                             </CalendarContainer>
                             : null
                     ))}
+                    <ActionsContainer>
+                        <PieceOfPeriod isActive={false} childColor={props.childColor}/>
+                        <Typography id="discrete-slider" style={{width: 75, paddingLeft: 15}}>
+                            Bloqueado
+                        </Typography>
+                        <div style={{paddingLeft: 30}}>
+                            <PieceOfPeriod isActive={true} childColor={props.childColor}/>
+                        </div>
+                        <Typography id="discrete-slider" style={{width: 75, paddingRight: 30, paddingLeft: 10}}>
+                            Permitido</Typography>
+                        <span style={{paddingRight: 7, fontWeight: "bold"}}>Clique ou arraste para bloquear/desbloquear a hora</span>
+                    </ActionsContainer>
+                    <ActionsContainer>
+                        <CustomButton addButton type="submit" onClick={props.handleSubmit}>
+                            Salvar
+                        </CustomButton>
+                    </ActionsContainer>
                 </Container>
-                <ActionsContainer>
-                    <Typography id="discrete-slider" style={{width: 75, paddingRight: 15}}>
-                        Bloqueado
-                    </Typography>
-                    <PieceOfPeriod isActive={false} childColor={props.childColor}/>
-                    <Typography id="discrete-slider" style={{width: 75, paddingRight: 10, paddingLeft: 30}}>
-                        Permitido</Typography>
-                    <PieceOfPeriod isActive={true} childColor={props.childColor}/>
-                </ActionsContainer>
-                <ActionsContainer>
-                    <CustomButton addButton type="submit" onClick={props.handleSubmit}>
-                        Salvar
-                    </CustomButton>
-                </ActionsContainer>
             </Paper>
             <ContainerDeleteButton>
                 <CustomButton type="button" deleteButton onClick={props.deleteChild}> Deletar </CustomButton>

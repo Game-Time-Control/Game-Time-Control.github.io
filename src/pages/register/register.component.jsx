@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react'
-import {Link} from "react-router-dom";
+import React, { useEffect, useState} from 'react'
+import { Link } from "react-router-dom";
 
 /* Styles */
-import {ContainerInput, SignInContainer, SignInLogo, AlignContainer, SignInContainerInside, ButtonsBarContainer, Row, Subtitle, FormInputContainer, FormInputLabel, GroupContainer, Title} from './register.styles'
+import { ContainerInput, SignInContainer, SignInLogo, AlignContainer, SignInContainerInside, ButtonsBarContainer, Row, Subtitle, FormInputContainer, FormInputLabel, GroupContainer, Title } from './register.styles'
 
 /* Material UI */
 import Container from "@material-ui/core/Container";
@@ -15,6 +15,7 @@ import TimeControl from "../../assets/timeControl.png";
 /* Components */
 import CustomButton from "../../components/custom-button/custom-button.component";
 import PopUp from "../../components/popup/popup.component";
+import Loader from "../../components/loader/loader.component";
 
 /* Icon */
 import IconButton from "@material-ui/core/IconButton";
@@ -22,7 +23,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddIcon from '@material-ui/icons/Add';
 
 /* Api */
-import {register} from "../../api/ApiParent";
+import { register } from "../../api/ApiParent";
 
 function FormInput({ handleChange, label, ...otherProps }) {
     return (
@@ -38,13 +39,14 @@ function FormInput({ handleChange, label, ...otherProps }) {
 }
 
 export default function RegisterPage() {
-    const [name, setName] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [repeatPassword, setRepeatPassword] = React.useState('');
-    const [children, setChildren] = React.useState(['']);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [children, setChildren] = useState(['']);
+    const [loading, setLoading] = useState(false);
 
-    const [popUp, setPopUp] = React.useState({
+    const [popUp, setPopUp] = useState({
         popUp: false,
         popUpTitle: "",
         popUpText: "",
@@ -62,7 +64,7 @@ export default function RegisterPage() {
     };
 
     const handleChangeInputRemove = (e, position) => {
-        if(children.length <= 1) {
+        if (children.length <= 1) {
             setPopUp({
                 popUp: true,
                 popUpTitle: "Erro",
@@ -71,7 +73,7 @@ export default function RegisterPage() {
             });
             return;
         }
-        if(children.length > 1) {
+        if (children.length > 1) {
             setChildren([...children.filter((children, index) => index !== position)])
         }
     }
@@ -87,16 +89,18 @@ export default function RegisterPage() {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        setLoading(true);
+
         let hasNoName = false;
         let tempChildren = [];
-        for(let i=0; i<children.length; i++) {
-            if(children[i] === '') {
+        for (let i = 0; i < children.length; i++) {
+            if (children[i] === '') {
                 hasNoName = true;
             }
-            tempChildren.push({name: children[i]});
+            tempChildren.push({ name: children[i] });
         }
 
-        if(hasNoName) {
+        if (hasNoName) {
             setPopUp({
                 popUp: true,
                 popUpTitle: "Erro",
@@ -106,7 +110,7 @@ export default function RegisterPage() {
             return;
         }
 
-        if(password !== repeatPassword) {
+        if (password !== repeatPassword) {
             setPopUp({
                 popUp: true,
                 popUpTitle: "Erro",
@@ -116,13 +120,18 @@ export default function RegisterPage() {
             return;
         }
 
-        let data = {parentName: name,
-                    email: email,
-                    password: password,
-                    children: [...tempChildren]}
+        let data = {
+            parentName: name,
+            email: email,
+            password: password,
+            children: [...tempChildren]
+        }
 
         const response = await register(data);
-        if(response.status === 422){
+
+        setLoading(false);
+
+        if (response.status === 422) {
             setPopUp({
                 popUp: true,
                 popUpTitle: "Erro",
@@ -136,7 +145,7 @@ export default function RegisterPage() {
 
         if (response.status !== 200) throw Error(body.message);
 
-        if(response.status === 200){
+        if (response.status === 200) {
             setPopUp({
                 popUp: true,
                 popUpTitle: "Aviso",
@@ -155,14 +164,14 @@ export default function RegisterPage() {
     };
 
     const handleChange = event => {
-        const {value, name} = event.target;
+        const { value, name } = event.target;
         if (name === 'password')
             setPassword(value);
-        else if(name === 'email')
+        else if (name === 'email')
             setEmail(value);
         else if (name === 'repeatPassword')
             setRepeatPassword(value);
-         else
+        else
             setName(value);
     };
 
@@ -171,7 +180,7 @@ export default function RegisterPage() {
             <AlignContainer>
                 <SignInContainer>
                     <SignInContainerInside>
-                        <SignInLogo src={TimeControl}/>
+                        <SignInLogo src={TimeControl} />
                         <Title> Novo cadastro </Title>
                         <Subtitle> Meus dados </Subtitle>
                         <form onSubmit={handleSubmit}>
@@ -224,30 +233,30 @@ export default function RegisterPage() {
                                         <Row key={index}>
                                             <div>
                                                 <FormInput
-                                                name={`name-${index}`}
-                                                type='text'
-                                                value={child}
-                                                handleChange={(e) => handleChangeChildren(e, index)}
-                                                label={`Nome da criança ${index+1}`}
-                                                required
+                                                    name={`name-${index}`}
+                                                    type='text'
+                                                    value={child}
+                                                    handleChange={(e) => handleChangeChildren(e, index)}
+                                                    label={`Nome da criança ${index + 1}`}
+                                                    required
                                                 />
                                             </div>
                                             <IconButton component={Button} onClick={(e) => handleChangeInputRemove(e, index)}>
                                                 <Tooltip title="Deletar criança">
-                                                    <DeleteIcon style={{width: 30, height: 30, fill: '#424242'}}/>
+                                                    <DeleteIcon style={{ width: 30, height: 30, fill: '#424242' }} />
                                                 </Tooltip>
                                             </IconButton>
 
                                         </Row>
                                     ))
                                 }
-                                <div style={{display: 'flex', justifyContent: 'center'}}>
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
                                     <CustomButton type='button' discreetButton onClick={addInputButton}>
-                                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                                            <div style={{paddingRight: 5}}>
+                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                                            <div style={{ paddingRight: 5 }}>
                                                 Adicionar criança
                                             </div>
-                                        <AddIcon style={{width: 22, height: 22, fill: '#424242'}}/>
+                                            <AddIcon style={{ width: 22, height: 22, fill: '#424242' }} />
                                         </div>
                                     </CustomButton>
                                 </div>
@@ -255,12 +264,14 @@ export default function RegisterPage() {
                                     <CustomButton type='submit' addButton> Cadastrar </CustomButton>
                                 </ButtonsBarContainer>
                                 <ButtonsBarContainer>
-                                    <Link to="/login" style={{textDecoration: 'none', color: '#0277bd'}}>Já tem cadastro?</Link>
+                                    <Link to="/login" style={{ textDecoration: 'none', color: '#0277bd' }}>Já tem cadastro?</Link>
                                 </ButtonsBarContainer>
                             </div>
                         </form>
+                        {loading ?
+                            <Loader /> : null}
                         {popUp.popUp ?
-                        <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route}/> : null}
+                            <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success} route={popUp.route} /> : null}
                     </SignInContainerInside>
                 </SignInContainer>
             </AlignContainer>

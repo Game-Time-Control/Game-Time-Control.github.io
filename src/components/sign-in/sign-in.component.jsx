@@ -1,11 +1,10 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {useHistory, Link} from "react-router-dom";
-
-/* Material UI */
 
 /* Components */
 import CustomButton from '../custom-button/custom-button.component';
 import PopUp from "../popup/popup.component";
+import Loader from "../loader/loader.component";
 
 /* Style */
 import {
@@ -49,12 +48,17 @@ FormInput.propTypes = {
 
 export default function SignIn(props) {
     const {setAuthData} = useContext(authContext);
-    const [email, setEmail] = React.useState(''); //permission is the same way of width
-    const [password, setPassword] = React.useState('');
+    const [email, setEmail] = useState(''); //permission is the same way of width
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     let history = useHistory();
 
-    const [popUp, setPopUp] = React.useState({
+    useEffect(() => {
+
+    }, [loading]);
+
+    const [popUp, setPopUp] = useState({
         popUp: false,
         popUpTitle: "",
         popUpText: "",
@@ -63,9 +67,12 @@ export default function SignIn(props) {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        
         try {
+            setLoading(true);
             let user = await login(email, password);
 
+            setLoading(false);
             if(user.status === 200) {
                 const body = await user.json();
                 setAuthData({
@@ -98,6 +105,7 @@ export default function SignIn(props) {
 
     const handleChange = event => {
         const {value, name} = event.target;
+
         if (name === 'password')
             setPassword(value);
         else
@@ -137,6 +145,9 @@ export default function SignIn(props) {
                     </ButtonsBarContainer>
                 </div>
             </form>
+
+            {loading ? 
+                <Loader/> : null}
             { popUp.popUp ?
                 <PopUp title={popUp.popUpTitle} string={popUp.popUpText} success={popUp.success}/> : null}
         </SignInContainer>
